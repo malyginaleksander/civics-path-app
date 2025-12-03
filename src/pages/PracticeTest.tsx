@@ -125,7 +125,7 @@ const PracticeTest = () => {
 
   if (testQuestions.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background safe-area-top flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Loading questions...</p>
         </div>
@@ -138,7 +138,7 @@ const PracticeTest = () => {
     const passed = accuracy >= 60;
 
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background safe-area-top">
         <PageHeader title="Test Complete" />
         
         <div className="px-4 py-6 max-w-3xl mx-auto">
@@ -236,7 +236,7 @@ const PracticeTest = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background safe-area-top">
       <PageHeader 
         title="Practice Test" 
         subtitle={`Question ${currentIndex + 1} of ${testQuestions.length}`}
