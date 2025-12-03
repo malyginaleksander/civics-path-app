@@ -33,7 +33,7 @@ const Results = () => {
     const wrongAnswers = selectedResult.answers.filter(a => !a.isCorrect);
     
     return (
-      <div className="min-h-screen bg-background pb-20">
+      <div className="min-h-screen bg-background pb-20 safe-area-top">
         <PageHeader 
           title="Test Details" 
           showBack

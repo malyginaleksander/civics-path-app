@@ -81,7 +81,7 @@ const LearningList = () => {
     const currentItem = itemsWithQuestions[currentCardIndex];
     
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background safe-area-top">
         <PageHeader 
           title="Learning Session" 
           subtitle={`Card ${currentCardIndex + 1} of ${itemsWithQuestions.length}`}

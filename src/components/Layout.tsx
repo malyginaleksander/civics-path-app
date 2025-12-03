@@ -7,8 +7,8 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-background">
-      <main className="pb-20 safe-area-top">
+    <div className="min-h-screen bg-background safe-area-top">
+      <main className="pb-20">
         {children}
       </main>
       <BottomNav />
