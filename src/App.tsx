@@ -11,6 +11,7 @@ import StudyMode from "./pages/StudyMode";
 import LearningList from "./pages/LearningList";
 import Settings from "./pages/Settings";
 import WeakAreas from "./pages/WeakAreas";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/learning" element={<LearningList />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/weak-areas" element={<WeakAreas />} />
+            <Route path="/install" element={<Install />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
