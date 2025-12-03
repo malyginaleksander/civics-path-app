@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Volume2, VolumeX, Bookmark, BookmarkCheck } from 'lucide-react';
 import { Question } from '@/data/questions';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn, shuffleArray } from '@/lib/utils';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useApp } from '@/contexts/AppContext';
 
@@ -29,6 +29,11 @@ export const QuestionCard = ({
   const [showExplanation, setShowExplanation] = useState(initialShowExplanation);
   const { speak, stop, isSpeaking } = useTextToSpeech();
   const { isInLearningList, addToLearningList, removeFromLearningList } = useApp();
+
+  // Shuffle answers once when question changes (using question.id as dependency)
+  const shuffledAnswers = useMemo(() => {
+    return shuffleArray(question.answers);
+  }, [question.id]);
 
   const isCorrect = selectedAnswer === question.correctAnswers[0];
   const inLearningList = isInLearningList(question.id);
@@ -91,7 +96,7 @@ export const QuestionCard = ({
       </div>
 
       <div className="space-y-2 mb-4">
-        {question.answers.map((answer, index) => {
+        {shuffledAnswers.map((answer, index) => {
           const isSelected = selectedAnswer === answer;
           const isCorrectAnswer = question.correctAnswers.includes(answer);
           
