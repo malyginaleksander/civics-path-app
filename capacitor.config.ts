@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.31ceac8a28a147e4921dcc766db32df5',
+  appId: 'com.civicspath.app',
   appName: 'US Citizenship Test Prep',
   webDir: 'dist',
   server: {
