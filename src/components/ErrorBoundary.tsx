@@ -30,7 +30,11 @@ export class ErrorBoundary extends Component<Props, State> {
             <h1 className="text-2xl font-bold text-foreground mb-4">Something went wrong</h1>
             <p className="text-muted-foreground mb-4">{this.state.error?.message}</p>
             <button
-              onClick={() => window.location.href = '#/'}
+              onClick={() => {
+                this.setState({ hasError: false, error: undefined });
+                window.location.hash = '#/';
+                window.location.reload();
+              }}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg"
             >
               Go Home
