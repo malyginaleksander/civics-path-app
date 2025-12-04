@@ -43,7 +43,10 @@ export const QuestionCard = ({
     if (isSpeaking) {
       stop();
     } else {
-      speak(question.question);
+      const textToSpeak = showResult 
+        ? `${question.question}. The correct answer is: ${question.correctAnswers[0]}`
+        : question.question;
+      speak(textToSpeak);
     }
   };
 
