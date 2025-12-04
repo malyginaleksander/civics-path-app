@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QuestionCard } from '@/components/QuestionCard';
 import { PageHeader } from '@/components/PageHeader';
+import { StatusBar } from '@/components/StatusBar';
 import { questions, getRandomQuestions, getQuestionById, Question } from '@/data/questions';
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
@@ -126,6 +127,7 @@ const PracticeTest = () => {
   if (testQuestions.length === 0) {
     return (
       <div className="min-h-screen bg-background safe-area-top flex items-center justify-center">
+        <StatusBar />
         <div className="text-center">
           <p className="text-muted-foreground">Loading questions...</p>
         </div>
@@ -139,6 +141,7 @@ const PracticeTest = () => {
 
     return (
       <div className="min-h-screen bg-background safe-area-top">
+        <StatusBar />
         <PageHeader title="Test Complete" />
         
         <div className="px-4 py-6 max-w-3xl mx-auto">
@@ -237,6 +240,7 @@ const PracticeTest = () => {
 
   return (
     <div className="min-h-screen bg-background safe-area-top">
+      <StatusBar />
       <PageHeader 
         title="Practice Test" 
         subtitle={`Question ${currentIndex + 1} of ${testQuestions.length}`}

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Play, Trash2, CheckCircle, Circle, Filter, BookOpen } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
+import { StatusBar } from '@/components/StatusBar';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { getQuestionById, categories, Question } from '@/data/questions';
@@ -82,6 +83,7 @@ const LearningList = () => {
     
     return (
       <div className="min-h-screen bg-background safe-area-top">
+        <StatusBar />
         <PageHeader 
           title="Learning Session" 
           subtitle={`Card ${currentCardIndex + 1} of ${itemsWithQuestions.length}`}
