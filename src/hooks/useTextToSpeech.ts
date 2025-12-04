@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useApp } from '@/contexts/AppContext';
-import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { Capacitor } from '@capacitor/core';
 
 export const useTextToSpeech = () => {
@@ -20,7 +19,8 @@ export const useTextToSpeech = () => {
       setIsSpeaking(true);
 
       if (isNative) {
-        // Use Capacitor native TTS
+        // Dynamically import Capacitor TTS plugin for native
+        const { TextToSpeech } = await import('@capacitor-community/text-to-speech');
         await TextToSpeech.speak({
           text,
           lang: 'en-US',
@@ -30,6 +30,7 @@ export const useTextToSpeech = () => {
           category: 'playback',
         });
         console.log('TTS: Native speech completed');
+        setIsSpeaking(false);
       } else {
         // Fallback to Web Speech API for browser
         if (!('speechSynthesis' in window)) {
@@ -55,20 +56,17 @@ export const useTextToSpeech = () => {
         utterance.onerror = () => setIsSpeaking(false);
 
         window.speechSynthesis.speak(utterance);
-        return; // Don't set isSpeaking to false here, wait for onend
       }
     } catch (error) {
       console.error('TTS: Error speaking:', error);
-    } finally {
-      if (isNative) {
-        setIsSpeaking(false);
-      }
+      setIsSpeaking(false);
     }
   }, [settings.audioEnabled, isNative]);
 
   const stop = useCallback(async () => {
     try {
       if (isNative) {
+        const { TextToSpeech } = await import('@capacitor-community/text-to-speech');
         await TextToSpeech.stop();
       } else if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -91,7 +89,9 @@ export const useTextToSpeech = () => {
   useEffect(() => {
     return () => {
       if (isNative) {
-        TextToSpeech.stop().catch(() => {});
+        import('@capacitor-community/text-to-speech').then(({ TextToSpeech }) => {
+          TextToSpeech.stop().catch(() => {});
+        }).catch(() => {});
       } else if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
