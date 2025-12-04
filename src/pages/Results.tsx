@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, Target, ChevronRight, Trash2 } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
-import { StatusBar } from '@/components/StatusBar';
 import { Button } from '@/components/ui/button';
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { getQuestionById } from '@/data/questions';
@@ -34,8 +33,7 @@ const Results = () => {
     const wrongAnswers = selectedResult.answers.filter(a => !a.isCorrect);
     
     return (
-      <div className="min-h-screen bg-background pb-20 safe-area-top">
-        <StatusBar />
+      <div className="min-h-screen bg-background pb-20 pt-[env(safe-area-inset-top,0px)]">
         <PageHeader 
           title="Test Details" 
           showBack
