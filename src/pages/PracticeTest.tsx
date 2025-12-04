@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QuestionCard } from '@/components/QuestionCard';
 import { PageHeader } from '@/components/PageHeader';
-import { StatusBar } from '@/components/StatusBar';
 import { questions, getRandomQuestions, getQuestionById, Question } from '@/data/questions';
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
@@ -126,8 +125,7 @@ const PracticeTest = () => {
 
   if (testQuestions.length === 0) {
     return (
-      <div className="min-h-screen bg-background safe-area-top flex items-center justify-center">
-        <StatusBar />
+      <div className="min-h-screen bg-background pt-[env(safe-area-inset-top,0px)] flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground">Loading questions...</p>
         </div>
@@ -136,13 +134,11 @@ const PracticeTest = () => {
   }
 
   if (isComplete) {
-    console.log('Test complete - rendering results', { correctCount, testQuestionsLength: testQuestions.length, answers });
     const accuracy = Math.round((correctCount / testQuestions.length) * 100);
     const passed = accuracy >= 60;
 
     return (
-      <div className="min-h-screen bg-background safe-area-top">
-        <StatusBar />
+      <div className="min-h-screen bg-background pt-[env(safe-area-inset-top,0px)]">
         <PageHeader title="Test Complete" />
         
         <div className="px-4 py-6 max-w-3xl mx-auto">
@@ -240,8 +236,7 @@ const PracticeTest = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background safe-area-top">
-      <StatusBar />
+    <div className="min-h-screen bg-background pt-[env(safe-area-inset-top,0px)]">
       <PageHeader 
         title="Practice Test" 
         subtitle={`Question ${currentIndex + 1} of ${testQuestions.length}`}
