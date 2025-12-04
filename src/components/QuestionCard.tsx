@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { cn, shuffleArray } from '@/lib/utils';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useApp } from '@/contexts/AppContext';
+import { toast } from 'sonner';
 
 interface QuestionCardProps {
   question: Question;
@@ -39,6 +40,11 @@ export const QuestionCard = ({
   const inLearningList = isInLearningList(question.id);
 
   const handleSpeak = () => {
+    if (!('speechSynthesis' in window)) {
+      toast.error('Text-to-speech not supported on this device');
+      return;
+    }
+    
     if (isSpeaking) {
       stop();
     } else {
