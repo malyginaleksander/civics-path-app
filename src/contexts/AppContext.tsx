@@ -116,6 +116,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       try {
         const { StatusBar, Style } = await import('@capacitor/status-bar');
         await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
+        // Set background color for Android
+        await StatusBar.setBackgroundColor({ 
+          color: isDark ? '#1a1a2e' : '#ffffff' 
+        });
       } catch (e) {
         // Not running in Capacitor or plugin not available
       }
