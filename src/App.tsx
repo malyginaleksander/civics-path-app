@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SafeAreaBar } from "@/components/SafeAreaBar";
 import Index from "./pages/Index";
 import PracticeTest from "./pages/PracticeTest";
 import Results from "./pages/Results";
@@ -22,6 +23,7 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <TooltipProvider>
+          <SafeAreaBar />
           <Toaster />
           <Sonner />
           <HashRouter>
