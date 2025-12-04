@@ -7,6 +7,7 @@ interface PageHeaderProps {
   title: string;
   subtitle?: string;
   showBack?: boolean;
+  backTo?: string;
   rightContent?: ReactNode;
 }
 
@@ -14,9 +15,18 @@ export const PageHeader = ({
   title,
   subtitle,
   showBack = false,
+  backTo = '/',
   rightContent,
 }: PageHeaderProps) => {
   const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(backTo);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -26,7 +36,7 @@ export const PageHeader = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(-1)}
+              onClick={handleBack}
               className="-ml-2"
             >
               <ChevronLeft size={24} />
