@@ -115,6 +115,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       // Style.Light = light icons (for dark backgrounds)
       try {
         const { StatusBar, Style } = await import('@capacitor/status-bar');
+        // Disable overlay so status bar has its own background
+        await StatusBar.setOverlaysWebView({ overlay: false });
+        // Set style - Dark means dark icons for light backgrounds
         await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
         // Set background color for Android
         await StatusBar.setBackgroundColor({ 
