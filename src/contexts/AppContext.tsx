@@ -102,12 +102,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => {
     localStorage.setItem('settings', JSON.stringify(settings));
     
-    // Apply theme
-    const applyTheme = (isDark: boolean) => {
+    // Apply theme and status bar
+    const applyTheme = async (isDark: boolean) => {
       if (isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
+      }
+      
+      // Update status bar for native apps
+      try {
+        const { StatusBar, Style } = await import('@capacitor/status-bar');
+        await StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light });
+      } catch (e) {
+        // Not running in Capacitor or plugin not available
       }
     };
 
