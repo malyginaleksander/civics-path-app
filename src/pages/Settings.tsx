@@ -32,22 +32,30 @@ const Settings = () => {
           
           <div className="bg-card rounded-xl card-shadow overflow-hidden">
             {/* Theme Toggle */}
-            <div className="p-4 flex items-center justify-between border-b border-border">
-              <div className="flex items-center gap-3">
+            <div className="p-4 border-b border-border">
+              <div className="flex items-center gap-3 mb-3">
                 {settings.theme === 'dark' ? (
                   <Moon size={20} className="text-muted-foreground" />
                 ) : (
                   <Sun size={20} className="text-muted-foreground" />
                 )}
                 <div>
-                  <p className="font-medium text-foreground">Dark Mode</p>
-                  <p className="text-sm text-muted-foreground">Easier on the eyes at night</p>
+                  <p className="font-medium text-foreground">Theme</p>
+                  <p className="text-sm text-muted-foreground">Choose your preferred appearance</p>
                 </div>
               </div>
-              <Switch
-                checked={settings.theme === 'dark'}
-                onCheckedChange={(checked) => updateSettings({ theme: checked ? 'dark' : 'light' })}
-              />
+              <div className="flex gap-2 ml-8">
+                {(['auto', 'light', 'dark'] as const).map((theme) => (
+                  <Button
+                    key={theme}
+                    variant={settings.theme === theme ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => updateSettings({ theme })}
+                  >
+                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  </Button>
+                ))}
+              </div>
             </div>
 
             {/* Font Size */}
