@@ -23,7 +23,7 @@ export interface LearningItem {
 }
 
 interface Settings {
-  theme: 'light' | 'dark';
+  theme: 'light' | 'dark' | 'auto';
   fontSize: 'normal' | 'medium' | 'large';
   audioEnabled: boolean;
   audioAutoplay: boolean;
@@ -56,7 +56,7 @@ interface AppContextType {
 }
 
 const defaultSettings: Settings = {
-  theme: 'light',
+  theme: 'auto',
   fontSize: 'normal',
   audioEnabled: true,
   audioAutoplay: false,
@@ -103,11 +103,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.setItem('settings', JSON.stringify(settings));
     
     // Apply theme
-    if (settings.theme === 'dark') {
-      document.documentElement.classList.add('dark');
+    const applyTheme = (isDark: boolean) => {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    if (settings.theme === 'auto') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      applyTheme(mediaQuery.matches);
+      
+      const handler = (e: MediaQueryListEvent) => applyTheme(e.matches);
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
     } else {
-      document.documentElement.classList.remove('dark');
+      applyTheme(settings.theme === 'dark');
     }
+  }, [settings.theme]);
+
+  useEffect(() => {
+    localStorage.setItem('settings', JSON.stringify(settings));
     
     // Apply font size
     document.documentElement.classList.remove('font-size-normal', 'font-size-medium', 'font-size-large');
