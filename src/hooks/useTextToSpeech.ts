@@ -7,12 +7,16 @@ export const useTextToSpeech = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const speak = useCallback((text: string) => {
-    if (!settings.audioEnabled || !('speechSynthesis' in window)) {
+    if (!settings.audioEnabled || !('speechSynthesis' in window) || !window.speechSynthesis) {
       return;
     }
 
     // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {
+      console.warn('Speech synthesis cancel failed:', e);
+    }
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 0.9;
@@ -37,7 +41,13 @@ export const useTextToSpeech = () => {
   }, [settings.audioEnabled]);
 
   const stop = useCallback(() => {
-    window.speechSynthesis.cancel();
+    try {
+      if ('speechSynthesis' in window && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    } catch (e) {
+      console.warn('Speech synthesis cancel failed:', e);
+    }
     setIsSpeaking(false);
   }, []);
 
@@ -52,14 +62,24 @@ export const useTextToSpeech = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      window.speechSynthesis.cancel();
+      try {
+        if ('speechSynthesis' in window && window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+      } catch (e) {
+        // Ignore cleanup errors
+      }
     };
   }, []);
 
   // Load voices
   useEffect(() => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
+    try {
+      if ('speechSynthesis' in window && window.speechSynthesis) {
+        window.speechSynthesis.getVoices();
+      }
+    } catch (e) {
+      // Ignore voice loading errors
     }
   }, []);
 
