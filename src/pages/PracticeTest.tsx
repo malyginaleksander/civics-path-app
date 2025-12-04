@@ -136,6 +136,7 @@ const PracticeTest = () => {
   }
 
   if (isComplete) {
+    console.log('Test complete - rendering results', { correctCount, testQuestionsLength: testQuestions.length, answers });
     const accuracy = Math.round((correctCount / testQuestions.length) * 100);
     const passed = accuracy >= 60;
 
