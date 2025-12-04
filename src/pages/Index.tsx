@@ -1,10 +1,12 @@
 import { Play, History, BookOpen, Bookmark, Target } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { HomeCard } from '@/components/HomeCard';
 import { Layout } from '@/components/Layout';
 import { useApp } from '@/contexts/AppContext';
 import { questions, categories } from '@/data/questions';
 
 const Index = () => {
+  const navigate = useNavigate();
   const { testResults, learningList, seenQuestions } = useApp();
   
   const lastScore = testResults[0]?.score;
@@ -101,7 +103,7 @@ const Index = () => {
               return (
                 <button
                   key={key}
-                  onClick={() => window.location.href = `/study?category=${key}`}
+                  onClick={() => navigate(`/study?category=${key}`)}
                   className="flex items-center gap-4 p-4 bg-card rounded-xl card-shadow hover:bg-accent transition-colors text-left"
                 >
                   <span className="text-2xl">{category.icon}</span>
