@@ -64,6 +64,16 @@ const StudyMode = () => {
     }
   };
 
+  const handleSpeakQuestionAndAnswer = (question: Question, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSpeaking) {
+      stop();
+    } else {
+      const text = `${question.question}. The answer is: ${question.correctAnswers.join(', or ')}`;
+      speak(text);
+    }
+  };
+
   const toggleLearningList = (questionId: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (isInLearningList(questionId)) {
@@ -183,9 +193,20 @@ const StudyMode = () => {
                               <div className="px-4 pb-4 animate-fade-in">
                                 <div className="ml-9 space-y-3">
                                   <div>
-                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                                      Answer
-                                    </p>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                        Answer
+                                      </p>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 text-xs"
+                                        onClick={(e) => handleSpeakQuestionAndAnswer(question, e)}
+                                      >
+                                        <Volume2 size={14} className="mr-1" />
+                                        Listen
+                                      </Button>
+                                    </div>
                                     <div className="space-y-1">
                                       {question.correctAnswers.map((answer, index) => (
                                         <p key={index} className="text-success font-medium">

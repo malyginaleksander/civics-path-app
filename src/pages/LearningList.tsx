@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Trash2, CheckCircle, Circle, Filter, BookOpen } from 'lucide-react';
+import { Play, Trash2, CheckCircle, Circle, BookOpen, Volume2 } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { getQuestionById, categories, Question } from '@/data/questions';
+import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { cn } from '@/lib/utils';
 
 type FilterType = 'all' | 'still-learning' | 'known';
@@ -13,10 +14,19 @@ type FilterType = 'all' | 'still-learning' | 'known';
 const LearningList = () => {
   const navigate = useNavigate();
   const { learningList, removeFromLearningList, updateLearningStatus } = useApp();
+  const { speak, stop, isSpeaking } = useTextToSpeech();
   const [filter, setFilter] = useState<FilterType>('all');
   const [showFlashcard, setShowFlashcard] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleSpeak = (text: string) => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      speak(text);
+    }
+  };
 
   const filteredItems = useMemo(() => {
     if (filter === 'all') return learningList;
@@ -122,6 +132,18 @@ const LearningList = () => {
                   <p className="text-sm text-muted-foreground mt-4">
                     Tap to reveal answer
                   </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSpeak(currentItem.question.question);
+                    }}
+                  >
+                    <Volume2 size={16} className="mr-2" />
+                    Listen
+                  </Button>
                 </>
               ) : (
                 <>
@@ -132,6 +154,18 @@ const LearningList = () => {
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {currentItem.question.explanation}
                   </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-4 mx-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSpeak(`${currentItem.question.question}. The answer is: ${currentItem.question.correctAnswers.join(', or ')}`);
+                    }}
+                  >
+                    <Volume2 size={16} className="mr-2" />
+                    Listen
+                  </Button>
                 </>
               )}
             </div>
@@ -276,6 +310,14 @@ const LearningList = () => {
                               {item.question.correctAnswers[0]}
                             </p>
                           </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="shrink-0 h-8 w-8"
+                            onClick={() => handleSpeak(`${item.question.question}. The answer is: ${item.question.correctAnswers.join(', or ')}`)}
+                          >
+                            <Volume2 size={16} />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="icon"
