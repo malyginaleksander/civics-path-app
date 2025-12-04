@@ -111,9 +111,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       }
       
       // Update status bar for native apps
+      // Style.Dark = dark icons (for light backgrounds)
+      // Style.Light = light icons (for dark backgrounds)
       try {
         const { StatusBar, Style } = await import('@capacitor/status-bar');
-        await StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light });
+        await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
       } catch (e) {
         // Not running in Capacitor or plugin not available
       }
