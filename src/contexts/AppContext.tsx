@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Question } from '@/data/questions';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 export interface TestResult {
   id: string;
@@ -102,13 +104,47 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => {
     localStorage.setItem('settings', JSON.stringify(settings));
     
-    // Apply theme
+    // Apply theme + update native status bar for Capacitor mobile apps
     const applyTheme = (isDark: boolean) => {
       if (isDark) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      // Update native status bar icons/background when running on mobile
+      (async () => {
+        try {
+          const platform = Capacitor.getPlatform();
+          console.log('[AppContext] applyTheme: platform=', platform, 'isDark=', isDark);
+          if (platform === 'android' || platform === 'ios') {
+            // Ensure the system status bar draws the background color we request
+            // (some devices require overlays disabled to respect background color)
+            try {
+              await StatusBar.setOverlaysWebView({ overlay: false });
+              console.log('[AppContext] setOverlaysWebView(false) success');
+            } catch (e) {
+              console.warn('[AppContext] setOverlaysWebView failed', e);
+            }
+
+            if (!isDark) {
+              // Light app theme -> request dark icons and white background
+              console.log('[AppContext] Setting StatusBar: background=#ffffff, style=Dark (dark icons)');
+              await StatusBar.setBackgroundColor({ color: '#ffffff' });
+              await StatusBar.setStyle({ style: Style.Light });
+            } else {
+              // Dark app theme -> request light icons and dark background
+              console.log('[AppContext] Setting StatusBar: background=#0f172a, style=Light (light icons)');
+              await StatusBar.setBackgroundColor({ color: '#0f172a' });
+              await StatusBar.setStyle({ style: Style.Dark });
+            }
+          } else {
+            console.log('[AppContext] StatusBar plugin not used on platform:', platform);
+          }
+        } catch (e) {
+          console.warn('[AppContext] StatusBar call failed:', e);
+        }
+      })();
     };
 
     if (settings.theme === 'auto') {
@@ -120,6 +156,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       return () => mediaQuery.removeEventListener('change', handler);
     } else {
       applyTheme(settings.theme === 'dark');
+    }
+    
+    // Update meta theme-color for browsers and WebViews as a fallback
+    try {
+      let meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        document.head.appendChild(meta);
+      }
+      // Light theme -> white status bar background, Dark theme -> dark background
+      meta.content = settings.theme === 'dark' ? '#0f172a' : '#ffffff';
+    } catch (e) {
+      // ignore in non-browser environments
     }
   }, [settings.theme]);
 
