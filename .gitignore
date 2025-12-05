@@ -1,19 +1,44 @@
 # Logs
 logs
 *.log
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies
+node_modules/
 
-# Editor directories and files
-.vscode/*
+# Build output (web)
+dist/
+build/
+
+# Capacitor/Native platforms (do not track generated platforms)
+android/
+ios/
+ios/Pods/
+
+# Capacitor iOS/Xcode
+*.xcworkspace/
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+
+# Capacitor Android/Gradle
+.gradle/
+build/
+local.properties
+
+# Vite/Cache
+.vite/
+
+# MacOS files
+.DS_Store
+
+# Env files
+.env
+.env.*
 !.vscode/extensions.json
 .idea
 .DS_Store
