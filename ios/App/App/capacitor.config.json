@@ -1,0 +1,9 @@
+{
+	"appId": "com.civicspath.app",
+	"appName": "US Citizenship Test Prep",
+	"webDir": "dist",
+	"packageClassList": [
+		"TextToSpeechPlugin",
+		"StatusBarPlugin"
+	]
+}
