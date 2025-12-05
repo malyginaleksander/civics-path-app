@@ -22,16 +22,11 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   const { isTrialExpired } = useApp();
 
-  const handleUpgrade = () => {
-    // TODO: Integrate with App Store / Play Store IAP
-    console.log('Upgrade clicked - integrate with native IAP');
-  };
-
   if (isTrialExpired) {
     return (
       <>
         <SafeAreaBar />
-        <TrialExpired onUpgrade={handleUpgrade} />
+        <TrialExpired />
       </>
     );
   }

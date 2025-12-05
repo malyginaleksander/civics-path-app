@@ -1,12 +1,46 @@
-import React from 'react';
-import { Lock, Star } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Lock, Star, RotateCcw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRevenueCat } from '@/hooks/useRevenueCat';
+import { Capacitor } from '@capacitor/core';
 
-interface TrialExpiredProps {
-  onUpgrade: () => void;
-}
+const TrialExpired: React.FC = () => {
+  const { 
+    offerings, 
+    getOfferings, 
+    purchasePackage, 
+    restorePurchases,
+    isLoading, 
+    error 
+  } = useRevenueCat();
+  const [currentPackage, setCurrentPackage] = useState<any>(null);
 
-const TrialExpired: React.FC<TrialExpiredProps> = ({ onUpgrade }) => {
+  useEffect(() => {
+    const loadOfferings = async () => {
+      const result = await getOfferings();
+      if (result?.current?.availablePackages?.length > 0) {
+        setCurrentPackage(result.current.availablePackages[0]);
+      }
+    };
+    
+    if (Capacitor.isNativePlatform()) {
+      loadOfferings();
+    }
+  }, [getOfferings]);
+
+  const handlePurchase = async () => {
+    if (currentPackage) {
+      await purchasePackage(currentPackage);
+    }
+  };
+
+  const handleRestore = async () => {
+    await restorePurchases();
+  };
+
+  const isNative = Capacitor.isNativePlatform();
+  const priceString = currentPackage?.product?.priceString || '$2.99';
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background p-6">
       <div className="max-w-md text-center space-y-6">
@@ -45,12 +79,32 @@ const TrialExpired: React.FC<TrialExpiredProps> = ({ onUpgrade }) => {
           </ul>
         </div>
 
+        {error && (
+          <p className="text-sm text-destructive">{error}</p>
+        )}
+
         <Button 
-          onClick={onUpgrade}
+          onClick={handlePurchase}
+          disabled={isLoading || (!isNative)}
           className="w-full h-12 text-lg font-semibold"
         >
-          Upgrade to Premium
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          ) : null}
+          {isNative ? `Upgrade for ${priceString}` : 'Upgrade to Premium'}
         </Button>
+
+        {isNative && (
+          <Button
+            variant="ghost"
+            onClick={handleRestore}
+            disabled={isLoading}
+            className="w-full"
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Restore Purchase
+          </Button>
+        )}
         
         <p className="text-xs text-muted-foreground">
           One-time purchase • No subscription
