@@ -32,6 +32,8 @@ interface Settings {
   reminderTime: string | null;
 }
 
+const TRIAL_DAYS = 5;
+
 interface AppContextType {
   // Test Results
   testResults: TestResult[];
@@ -52,6 +54,12 @@ interface AppContextType {
   // Settings
   settings: Settings;
   updateSettings: (settings: Partial<Settings>) => void;
+  
+  // Trial & Premium
+  trialDaysLeft: number;
+  isTrialExpired: boolean;
+  isPremium: boolean;
+  setPremium: (value: boolean) => void;
   
   // Clear all data
   clearAllData: () => void;
@@ -87,6 +95,35 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const saved = localStorage.getItem('settings');
     return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
   });
+
+  const [trialStartDate] = useState<string>(() => {
+    const saved = localStorage.getItem('trialStartDate');
+    if (saved) return saved;
+    const now = new Date().toISOString();
+    localStorage.setItem('trialStartDate', now);
+    return now;
+  });
+
+  const [isPremium, setIsPremium] = useState<boolean>(() => {
+    const saved = localStorage.getItem('isPremium');
+    return saved === 'true';
+  });
+
+  const trialDaysLeft = React.useMemo(() => {
+    if (isPremium) return TRIAL_DAYS;
+    const start = new Date(trialStartDate);
+    const now = new Date();
+    const diffMs = now.getTime() - start.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    return Math.max(0, TRIAL_DAYS - diffDays);
+  }, [trialStartDate, isPremium]);
+
+  const isTrialExpired = !isPremium && trialDaysLeft === 0;
+
+  const setPremium = (value: boolean) => {
+    setIsPremium(value);
+    localStorage.setItem('isPremium', String(value));
+  };
 
   // Persist to localStorage
   useEffect(() => {
@@ -249,6 +286,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       markQuestionAsSeen,
       settings,
       updateSettings,
+      trialDaysLeft,
+      isTrialExpired,
+      isPremium,
+      setPremium,
       clearAllData,
     }}>
       {children}

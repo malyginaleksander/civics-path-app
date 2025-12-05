@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -7,7 +7,7 @@ import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, setPremium } = useApp();
 
   const fontSizes = [
     { value: 'normal', label: 'Normal' },
@@ -26,6 +26,35 @@ const Settings = () => {
       <PageHeader title="Settings" />
 
       <div className="px-4 py-4 max-w-3xl mx-auto">
+        {/* Subscription */}
+        <section className="mb-8">
+          <h2 className="text-lg font-bold text-foreground mb-4">Subscription</h2>
+          
+          <div className="bg-card rounded-xl card-shadow overflow-hidden">
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Crown size={20} className={isPremium ? "text-primary" : "text-muted-foreground"} />
+                <div>
+                  <p className="font-medium text-foreground">
+                    {isPremium ? 'Premium Active' : 'Free Trial'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {isPremium 
+                      ? 'You have full access to all features'
+                      : `${trialDaysLeft} day${trialDaysLeft !== 1 ? 's' : ''} remaining`
+                    }
+                  </p>
+                </div>
+              </div>
+              {/* Dev toggle for testing */}
+              <Switch
+                checked={isPremium}
+                onCheckedChange={setPremium}
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Appearance */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-foreground mb-4">Appearance</h2>

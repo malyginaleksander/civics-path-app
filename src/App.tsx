@@ -3,9 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { AppProvider } from "@/contexts/AppContext";
+import { AppProvider, useApp } from "@/contexts/AppContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SafeAreaBar } from "@/components/SafeAreaBar";
+import TrialExpired from "@/components/TrialExpired";
 import Index from "./pages/Index";
 import PracticeTest from "./pages/PracticeTest";
 import Results from "./pages/Results";
@@ -18,27 +19,51 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AppContent = () => {
+  const { isTrialExpired } = useApp();
+
+  const handleUpgrade = () => {
+    // TODO: Integrate with App Store / Play Store IAP
+    console.log('Upgrade clicked - integrate with native IAP');
+  };
+
+  if (isTrialExpired) {
+    return (
+      <>
+        <SafeAreaBar />
+        <TrialExpired onUpgrade={handleUpgrade} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <SafeAreaBar />
+      <Toaster />
+      <Sonner />
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/practice" element={<PracticeTest />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/study" element={<StudyMode />} />
+          <Route path="/learning" element={<LearningList />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/weak-areas" element={<WeakAreas />} />
+          <Route path="/install" element={<Install />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </HashRouter>
+    </>
+  );
+};
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <TooltipProvider>
-          <SafeAreaBar />
-          <Toaster />
-          <Sonner />
-          <HashRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/practice" element={<PracticeTest />} />
-              <Route path="/results" element={<Results />} />
-              <Route path="/study" element={<StudyMode />} />
-              <Route path="/learning" element={<LearningList />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/weak-areas" element={<WeakAreas />} />
-              <Route path="/install" element={<Install />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </HashRouter>
+          <AppContent />
         </TooltipProvider>
       </AppProvider>
     </QueryClientProvider>
