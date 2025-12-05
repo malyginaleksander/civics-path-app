@@ -34,5 +34,11 @@ export const Layout = ({ children }: LayoutProps) => {
         <BottomNav />
       </div>
     </>
+    <div className="min-h-screen bg-background" style={{ paddingTop: 'max(env(safe-area-inset-top, 24px), 24px)' }}>
+      <main className="pb-20">
+        {children}
+      </main>
+      <BottomNav />
+    </div>
   );
 };

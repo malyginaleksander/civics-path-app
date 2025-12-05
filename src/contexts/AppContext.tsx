@@ -106,6 +106,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     
     // Apply theme + update native status bar for Capacitor mobile apps
     const applyTheme = (isDark: boolean) => {
+    // Apply theme and status bar
+    const applyTheme = async (isDark: boolean) => {
       if (isDark) {
         document.documentElement.classList.add('dark');
       } else {
@@ -145,6 +147,23 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           console.warn('[AppContext] StatusBar call failed:', e);
         }
       })();
+      
+      // Update status bar for native apps
+      // Style.Dark = dark icons (for light backgrounds)
+      // Style.Light = light icons (for dark backgrounds)
+      try {
+        const { StatusBar, Style } = await import('@capacitor/status-bar');
+        // Disable overlay so status bar has its own background
+        await StatusBar.setOverlaysWebView({ overlay: false });
+        // Set style - Dark means dark icons for light backgrounds
+        await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
+        // Set background color for Android
+        await StatusBar.setBackgroundColor({ 
+          color: isDark ? '#1a1a2e' : '#ffffff' 
+        });
+      } catch (e) {
+        // Not running in Capacitor or plugin not available
+      }
     };
 
     if (settings.theme === 'auto') {
