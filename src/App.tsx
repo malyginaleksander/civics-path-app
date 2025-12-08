@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,6 +7,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { AppProvider, useApp } from "@/contexts/AppContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SafeAreaBar } from "@/components/SafeAreaBar";
+import { useRevenueCat } from "@/hooks/useRevenueCat";
 import TrialExpired from "@/components/TrialExpired";
 import Index from "./pages/Index";
 import PracticeTest from "./pages/PracticeTest";
@@ -21,6 +23,16 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { isTrialExpired } = useApp();
+  
+  // Check RevenueCat subscription status on app startup
+  // This restores premium status even after clearing local data
+  const { checkSubscriptionStatus, isInitialized } = useRevenueCat();
+  
+  useEffect(() => {
+    if (isInitialized) {
+      checkSubscriptionStatus();
+    }
+  }, [isInitialized, checkSubscriptionStatus]);
 
   if (isTrialExpired) {
     return (
