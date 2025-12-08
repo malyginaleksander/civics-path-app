@@ -29,9 +29,12 @@ const Settings = () => {
   }, [offerings]);
 
   const handleUpgrade = async () => {
-    if (currentPackage) {
-      await purchasePackage(currentPackage);
+    if (!currentPackage) {
+      console.error('No package available - RevenueCat not configured');
+      alert('Purchase not available. Please contact support.');
+      return;
     }
+    await purchasePackage(currentPackage);
   };
 
   const handleRestore = async () => {
