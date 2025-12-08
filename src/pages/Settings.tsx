@@ -1,13 +1,42 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2 } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
+import { useRevenueCat } from '@/hooks/useRevenueCat';
+import { Capacitor } from '@capacitor/core';
+import { useEffect, useState } from 'react';
 
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, setPremium } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium } = useApp();
+  const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading } = useRevenueCat();
+  const [currentPackage, setCurrentPackage] = useState<any>(null);
+
+  const isNative = Capacitor.isNativePlatform();
+
+  useEffect(() => {
+    if (isNative && !isPremium) {
+      getOfferings();
+    }
+  }, [isNative, isPremium]);
+
+  useEffect(() => {
+    if (offerings?.current?.availablePackages?.length > 0) {
+      setCurrentPackage(offerings.current.availablePackages[0]);
+    }
+  }, [offerings]);
+
+  const handleUpgrade = async () => {
+    if (currentPackage) {
+      await purchasePackage(currentPackage);
+    }
+  };
+
+  const handleRestore = async () => {
+    await restorePurchases();
+  };
 
   const fontSizes = [
     { value: 'normal', label: 'Normal' },
@@ -46,12 +75,27 @@ const Settings = () => {
                   </p>
                 </div>
               </div>
-              {/* Dev toggle for testing */}
-              <Switch
-                checked={isPremium}
-                onCheckedChange={setPremium}
-              />
+              {!isPremium && isNative && (
+                <Button 
+                  size="sm" 
+                  onClick={handleUpgrade}
+                  disabled={isLoading || !currentPackage}
+                >
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Upgrade'}
+                </Button>
+              )}
             </div>
+            {!isPremium && isNative && (
+              <div className="px-4 pb-4 pt-0">
+                <button
+                  onClick={handleRestore}
+                  disabled={isLoading}
+                  className="text-sm text-primary hover:underline disabled:opacity-50"
+                >
+                  Restore Purchase
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
