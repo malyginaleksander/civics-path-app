@@ -269,6 +269,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setLearningList([]);
     setSeenQuestions([]);
     setSettings(defaultSettings);
+    setIsPremium(false);
     localStorage.clear();
   };
 
