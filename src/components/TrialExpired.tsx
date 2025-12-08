@@ -85,7 +85,7 @@ const TrialExpired: React.FC = () => {
 
         <Button 
           onClick={handlePurchase}
-          disabled={isLoading || (!isNative)}
+          disabled={isLoading}
           className="w-full h-12 text-lg font-semibold"
         >
           {isLoading ? (

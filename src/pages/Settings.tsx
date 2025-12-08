@@ -79,7 +79,7 @@ const Settings = () => {
                 <Button 
                   size="sm" 
                   onClick={handleUpgrade}
-                  disabled={isLoading || !currentPackage}
+                  disabled={isLoading}
                 >
                   {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Upgrade'}
                 </Button>
