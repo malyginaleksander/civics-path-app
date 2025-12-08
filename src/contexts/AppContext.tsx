@@ -96,7 +96,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
   });
 
-  const [trialStartDate] = useState<string>(() => {
+  const [trialStartDate, setTrialStartDate] = useState<string>(() => {
     const saved = localStorage.getItem('trialStartDate');
     if (saved) return saved;
     const now = new Date().toISOString();
@@ -270,7 +270,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSeenQuestions([]);
     setSettings(defaultSettings);
     setIsPremium(false);
+    // Reset trial start date to now (restarts the 5-day trial)
+    const now = new Date().toISOString();
+    setTrialStartDate(now);
     localStorage.clear();
+    localStorage.setItem('trialStartDate', now);
   };
 
   return (
