@@ -72,11 +72,22 @@ export const useRevenueCat = () => {
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const result = await Purchases.getOfferings();
+      
+      console.log('RevenueCat offerings result:', JSON.stringify(result, null, 2));
+      
+      if (!result?.current) {
+        console.warn('RevenueCat: No current offering. Check RevenueCat dashboard: 1) Products added 2) Entitlements configured 3) Offerings created with packages');
+        setError('No products available. Please try again later.');
+      } else if (!result.current.availablePackages?.length) {
+        console.warn('RevenueCat: Offering exists but no packages. Add packages to your offering in RevenueCat dashboard.');
+        setError('No products available. Please try again later.');
+      }
+      
       setOfferings(result);
       return result;
     } catch (err) {
       console.error('Error getting offerings:', err);
-      setError('Failed to load products');
+      setError('Failed to load products. Check internet connection.');
       return null;
     } finally {
       setIsLoading(false);
