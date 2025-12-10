@@ -25,13 +25,13 @@ export const useRevenueCat = () => {
       // Set debug logging (disable in production)
       await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
 
-      // Configure with your API key
+      // Configure with your API key (public keys are safe to include in client)
       const apiKey = Capacitor.getPlatform() === 'ios' 
-        ? import.meta.env.VITE_REVENUECAT_IOS_KEY 
-        : import.meta.env.VITE_REVENUECAT_ANDROID_KEY;
+        ? '' // Add iOS key when ready
+        : 'goog_CYjgsvnBGrhXfffPaOozVBJNxKO';
 
       if (!apiKey) {
-        console.warn('RevenueCat: API key not configured');
+        console.warn('RevenueCat: API key not configured for this platform');
         return;
       }
 
