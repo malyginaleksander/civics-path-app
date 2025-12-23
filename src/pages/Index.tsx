@@ -28,7 +28,21 @@ const Index = () => {
             Master all 100 USCIS civics questions
           </p>
         </div>
-
+        {/* Disclaimer Banner */}
+        <div className="mb-6 p-3 bg-muted/50 rounded-lg border border-border">
+          <p className="text-xs text-muted-foreground text-center">
+            This app is not affiliated with or endorsed by the U.S. government or USCIS. 
+            Questions are based on{' '}
+            <a 
+              href="https://www.uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              official USCIS materials
+            </a>
+          </p>
+        </div>
         {/* Progress Overview */}
         <div className="grid grid-cols-3 gap-3 mb-8">
           <div className="bg-card rounded-xl p-4 text-center card-shadow">

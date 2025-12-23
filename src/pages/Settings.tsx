@@ -249,6 +249,23 @@ const Settings = () => {
             <p className="text-xs text-muted-foreground mt-2">
               100 official USCIS civics questions
             </p>
+            <div className="mt-4 p-3 bg-muted/50 rounded-lg text-xs text-muted-foreground">
+              <p className="mb-2">
+                <strong>Disclaimer:</strong> This app is not affiliated with, endorsed by, 
+                or sponsored by the U.S. government, USCIS, or any government agency.
+              </p>
+              <p>
+                Study materials are based on the official USCIS civics test.{' '}
+                <a 
+                  href="https://www.uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                >
+                  View official source →
+                </a>
+              </p>
+            </div>
           </div>
         </section>
       </div>
