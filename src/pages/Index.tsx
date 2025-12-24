@@ -25,7 +25,7 @@ const Index = () => {
             US Citizenship Test Prep
           </h1>
           <p className="text-muted-foreground">
-            Master all 100 USCIS civics questions
+            Master all 128 official 2025 USCIS civics questions
           </p>
         </div>
         {/* Disclaimer Banner */}

@@ -247,7 +247,7 @@ const Settings = () => {
             <p className="font-bold text-foreground">US Citizenship Test Prep</p>
             <p className="text-sm text-muted-foreground">Version 1.0.0</p>
             <p className="text-xs text-muted-foreground mt-2">
-              100 official USCIS civics questions
+              128 official 2025 USCIS civics questions
             </p>
             <div className="mt-4 p-3 bg-muted/50 rounded-lg text-xs text-muted-foreground">
               <p className="mb-2">
