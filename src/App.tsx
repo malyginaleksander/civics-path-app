@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AppProvider, useApp } from "@/contexts/AppContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SafeAreaBar } from "@/components/SafeAreaBar";
@@ -21,11 +21,35 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const AppContent = () => {
+const AppRoutes = () => {
   const { isTrialExpired } = useApp();
+  const location = useLocation();
   
+  // Allow practice test page even when trial expired (so users can finish/restart tests)
+  const isPracticePage = location.pathname === '/practice';
+  const showTrialExpired = isTrialExpired && !isPracticePage;
+
+  if (showTrialExpired) {
+    return <TrialExpired />;
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/practice" element={<PracticeTest />} />
+      <Route path="/results" element={<Results />} />
+      <Route path="/study" element={<StudyMode />} />
+      <Route path="/learning" element={<LearningList />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/weak-areas" element={<WeakAreas />} />
+      <Route path="/install" element={<Install />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
+const AppContent = () => {
   // Check RevenueCat subscription status on app startup
-  // This restores premium status even after clearing local data
   const { checkSubscriptionStatus, isInitialized } = useRevenueCat();
   
   useEffect(() => {
@@ -34,32 +58,13 @@ const AppContent = () => {
     }
   }, [isInitialized, checkSubscriptionStatus]);
 
-  if (isTrialExpired) {
-    return (
-      <>
-        <SafeAreaBar />
-        <TrialExpired />
-      </>
-    );
-  }
-
   return (
     <>
       <SafeAreaBar />
       <Toaster />
       <Sonner />
       <HashRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/practice" element={<PracticeTest />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/study" element={<StudyMode />} />
-          <Route path="/learning" element={<LearningList />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/weak-areas" element={<WeakAreas />} />
-          <Route path="/install" element={<Install />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppRoutes />
       </HashRouter>
     </>
   );
