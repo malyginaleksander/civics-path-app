@@ -471,7 +471,7 @@ export const questions: Question[] = [
     id: 48,
     question: "What are two Cabinet-level positions?",
     answers: ["Secretary of State and Secretary of Defense", "Senator and Representative", "Governor and Mayor", "Judge and Lawyer"],
-    correctAnswers: ["Attorney General", "Secretary of Agriculture", "Secretary of Commerce", "Secretary of Education", "Secretary of Energy", "Secretary of Health and Human Services", "Secretary of Homeland Security", "Secretary of Housing and Urban Development", "Secretary of the Interior", "Secretary of Labor", "Secretary of State", "Secretary of Transportation", "Secretary of the Treasury", "Secretary of Veterans Affairs", "Secretary of Defense", "Vice President"],
+    correctAnswers: ["Secretary of State and Secretary of Defense", "Attorney General", "Secretary of Agriculture", "Secretary of Commerce", "Secretary of Education", "Secretary of Energy", "Secretary of Health and Human Services", "Secretary of Homeland Security", "Secretary of Housing and Urban Development", "Secretary of the Interior", "Secretary of Labor", "Secretary of State", "Secretary of Transportation", "Secretary of the Treasury", "Secretary of Veterans Affairs", "Secretary of Defense", "Vice President"],
     explanation: "Cabinet positions include Secretary of State, Secretary of Defense, Attorney General, and many others.",
     category: 'government',
     seniorQuestion: false,
