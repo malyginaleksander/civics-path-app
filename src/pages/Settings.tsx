@@ -85,7 +85,9 @@ const Settings = () => {
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {isPremium 
-                      ? 'You have full access to all features'
+                      ? (usedPromoCode 
+                          ? `Activated with code "${usedPromoCode}"`
+                          : 'You have full access to all features')
                       : `${trialDaysLeft} day${trialDaysLeft !== 1 ? 's' : ''} remaining`
                     }
                   </p>
