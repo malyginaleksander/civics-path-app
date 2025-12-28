@@ -19,6 +19,14 @@ const Settings = () => {
 
   const isNative = Capacitor.isNativePlatform();
 
+  // Auto-sync: if promo code exists but premium is false, fix it
+  useEffect(() => {
+    if (usedPromoCode && !isPremium) {
+      // Re-apply premium status that was lost
+      activatePromoCode(usedPromoCode);
+    }
+  }, [usedPromoCode, isPremium, activatePromoCode]);
+
   useEffect(() => {
     if (isNative && !isPremium) {
       getOfferings();
