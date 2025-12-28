@@ -136,8 +136,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const activatePromoCode = (code: string): { success: boolean; message: string } => {
     const normalizedCode = code.trim().toUpperCase();
     
-    if (usedPromoCode) {
-      return { success: false, message: 'A promo code has already been used on this device.' };
+    // Allow re-applying if premium isn't active yet (sync fix)
+    if (usedPromoCode && isPremium) {
+      return { success: false, message: 'Premium is already activated.' };
     }
     
     if (!normalizedCode) {
