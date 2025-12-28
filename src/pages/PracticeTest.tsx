@@ -29,7 +29,7 @@ const PracticeTest = () => {
   const [startTime, setStartTime] = useState(() => Date.now());
   const [timeSpent, setTimeSpent] = useState(0);
 
-  // Initialize / reset test when route params change
+  // Initialize / reset test when route params change (not when learningList changes)
   useEffect(() => {
     // Reset state so "Start New Test" works even when staying on /practice
     setCurrentIndex(0);
@@ -51,8 +51,9 @@ const PracticeTest = () => {
         .filter(Boolean) as Question[];
       setTestQuestions(wrongQuestions);
     } else if (mode === 'learning') {
-      // Practice from learning list
-      const learningQuestions = learningList
+      // Practice from learning list - capture current state at test start
+      const currentLearningList = learningList;
+      const learningQuestions = currentLearningList
         .filter(l => l.status === 'still-learning')
         .map(l => getQuestionById(l.questionId))
         .filter(Boolean) as Question[];
@@ -64,7 +65,8 @@ const PracticeTest = () => {
       // Standard practice test
       setTestQuestions(getRandomQuestions(20));
     }
-  }, [searchParams, learningList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   // Update time spent
   useEffect(() => {
