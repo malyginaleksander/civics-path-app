@@ -33,6 +33,7 @@ interface Settings {
 }
 
 const TRIAL_DAYS = 5;
+const VALID_PROMO_CODES = ['FREEUSCIS', 'CITIZEN2025', 'PREMIUM100'];
 
 interface AppContextType {
   // Test Results
@@ -60,6 +61,8 @@ interface AppContextType {
   isTrialExpired: boolean;
   isPremium: boolean;
   setPremium: (value: boolean) => void;
+  activatePromoCode: (code: string) => { success: boolean; message: string };
+  usedPromoCode: string | null;
   
   // Clear all data
   clearAllData: () => void;
@@ -109,6 +112,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return saved === 'true';
   });
 
+  const [usedPromoCode, setUsedPromoCode] = useState<string | null>(() => {
+    return localStorage.getItem('usedPromoCode');
+  });
+
   const trialDaysLeft = React.useMemo(() => {
     if (isPremium) return TRIAL_DAYS;
     const start = new Date(trialStartDate);
@@ -123,6 +130,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const setPremium = (value: boolean) => {
     setIsPremium(value);
     localStorage.setItem('isPremium', String(value));
+  };
+
+  const activatePromoCode = (code: string): { success: boolean; message: string } => {
+    const normalizedCode = code.trim().toUpperCase();
+    
+    if (usedPromoCode) {
+      return { success: false, message: 'A promo code has already been used on this device.' };
+    }
+    
+    if (!normalizedCode) {
+      return { success: false, message: 'Please enter a promo code.' };
+    }
+    
+    if (VALID_PROMO_CODES.includes(normalizedCode)) {
+      setPremium(true);
+      setUsedPromoCode(normalizedCode);
+      localStorage.setItem('usedPromoCode', normalizedCode);
+      return { success: true, message: 'Premium activated successfully!' };
+    }
+    
+    return { success: false, message: 'Invalid promo code. Please try again.' };
   };
 
   // Persist to localStorage
@@ -295,6 +323,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       isTrialExpired,
       isPremium,
       setPremium,
+      activatePromoCode,
+      usedPromoCode,
       clearAllData,
     }}>
       {children}

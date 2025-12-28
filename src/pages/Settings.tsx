@@ -1,18 +1,21 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2 } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, usedPromoCode } = useApp();
   const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
+  const [promoCode, setPromoCode] = useState('');
 
   const isNative = Capacitor.isNativePlatform();
 
@@ -39,6 +42,16 @@ const Settings = () => {
 
   const handleRestore = async () => {
     await restorePurchases();
+  };
+
+  const handlePromoCode = () => {
+    const result = activatePromoCode(promoCode);
+    if (result.success) {
+      toast.success(result.message);
+      setPromoCode('');
+    } else {
+      toast.error(result.message);
+    }
   };
 
   const fontSizes = [
@@ -97,6 +110,37 @@ const Settings = () => {
                 >
                   Restore Purchase
                 </button>
+              </div>
+            )}
+            
+            {/* Promo Code Section */}
+            {!isPremium && (
+              <div className="px-4 pb-4 pt-2 border-t border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Gift size={16} className="text-muted-foreground" />
+                  <p className="text-sm font-medium text-foreground">Have a promo code?</p>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Enter code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="flex-1"
+                    disabled={!!usedPromoCode}
+                  />
+                  <Button 
+                    size="sm" 
+                    onClick={handlePromoCode}
+                    disabled={!promoCode.trim() || !!usedPromoCode}
+                  >
+                    Apply
+                  </Button>
+                </div>
+                {usedPromoCode && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Code "{usedPromoCode}" already used
+                  </p>
+                )}
               </div>
             )}
           </div>
