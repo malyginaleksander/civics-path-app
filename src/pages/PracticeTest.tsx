@@ -26,11 +26,20 @@ const PracticeTest = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>();
   const [showResult, setShowResult] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [startTime] = useState(Date.now());
+  const [startTime, setStartTime] = useState(() => Date.now());
   const [timeSpent, setTimeSpent] = useState(0);
 
-  // Initialize test
+  // Initialize / reset test when route params change
   useEffect(() => {
+    // Reset state so "Start New Test" works even when staying on /practice
+    setCurrentIndex(0);
+    setAnswers([]);
+    setSelectedAnswer(undefined);
+    setShowResult(false);
+    setIsComplete(false);
+    setTimeSpent(0);
+    setStartTime(Date.now());
+
     const mode = searchParams.get('mode');
     const questionIds = searchParams.get('questions');
 
@@ -216,7 +225,7 @@ const PracticeTest = () => {
               </Button>
             )}
             <Button
-              onClick={() => navigate('/practice')}
+              onClick={() => navigate(`/practice?run=${Date.now()}`)}
               className="w-full"
               variant="outline"
             >

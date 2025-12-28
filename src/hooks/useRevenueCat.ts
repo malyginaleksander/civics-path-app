@@ -54,9 +54,12 @@ export const useRevenueCat = () => {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const { customerInfo } = await Purchases.getCustomerInfo();
       
-      const hasActiveEntitlement = ENTITLEMENT_ID in (customerInfo.entitlements?.active || {});
+      const activeEntitlements = customerInfo.entitlements?.active || {};
+      const hasActiveEntitlement =
+        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
+        Object.keys(activeEntitlements).length > 0;
       setPremium(hasActiveEntitlement);
-      
+
       return hasActiveEntitlement;
     } catch (err) {
       console.error('Error checking subscription:', err);
@@ -110,9 +113,12 @@ export const useRevenueCat = () => {
         aPackage: packageToPurchase 
       });
 
-      const hasActiveEntitlement = ENTITLEMENT_ID in (customerInfo.entitlements?.active || {});
+      const activeEntitlements = customerInfo.entitlements?.active || {};
+      const hasActiveEntitlement =
+        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
+        Object.keys(activeEntitlements).length > 0;
       setPremium(hasActiveEntitlement);
-      
+
       return hasActiveEntitlement;
     } catch (err: any) {
       if (err.code === 'PURCHASE_CANCELLED') {
@@ -140,9 +146,12 @@ export const useRevenueCat = () => {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const { customerInfo } = await Purchases.restorePurchases();
 
-      const hasActiveEntitlement = ENTITLEMENT_ID in (customerInfo.entitlements?.active || {});
+      const activeEntitlements = customerInfo.entitlements?.active || {};
+      const hasActiveEntitlement =
+        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
+        Object.keys(activeEntitlements).length > 0;
       setPremium(hasActiveEntitlement);
-      
+
       return hasActiveEntitlement;
     } catch (err) {
       console.error('Restore error:', err);
