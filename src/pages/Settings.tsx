@@ -12,20 +12,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, usedPromoCode } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, clearPromoCode, usedPromoCode } = useApp();
   const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
   const [promoCode, setPromoCode] = useState('');
 
   const isNative = Capacitor.isNativePlatform();
-
-  // Auto-sync: if promo code exists but premium is false, fix it
-  useEffect(() => {
-    if (usedPromoCode && !isPremium) {
-      // Re-apply premium status that was lost
-      activatePromoCode(usedPromoCode);
-    }
-  }, [usedPromoCode, isPremium, activatePromoCode]);
 
   useEffect(() => {
     if (isNative && !isPremium) {
@@ -99,6 +91,18 @@ const Settings = () => {
                       : `${trialDaysLeft} day${trialDaysLeft !== 1 ? 's' : ''} remaining`
                     }
                   </p>
+                  {isPremium && usedPromoCode && (
+                    <button
+                      onClick={() => {
+                        clearPromoCode();
+                        toast.message('Promo code cleared. You can enter a new one.');
+                      }}
+                      className="mt-1 text-xs text-primary hover:underline"
+                      type="button"
+                    >
+                      Use different code
+                    </button>
+                  )}
                 </div>
               </div>
               {!isPremium && isNative && (
@@ -136,19 +140,18 @@ const Settings = () => {
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     className="flex-1"
-                    disabled={!!usedPromoCode}
                   />
                   <Button 
                     size="sm" 
                     onClick={handlePromoCode}
-                    disabled={!promoCode.trim() || !!usedPromoCode}
+                    disabled={!promoCode.trim()}
                   >
                     Apply
                   </Button>
                 </div>
                 {usedPromoCode && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    Code "{usedPromoCode}" already used
+                    A code is already applied. Tap “Use different code” above to change it.
                   </p>
                 )}
               </div>
