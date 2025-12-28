@@ -107,13 +107,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return now;
   });
 
-  const [isPremium, setIsPremium] = useState<boolean>(() => {
-    const saved = localStorage.getItem('isPremium');
-    return saved === 'true';
-  });
-
   const [usedPromoCode, setUsedPromoCode] = useState<string | null>(() => {
     return localStorage.getItem('usedPromoCode');
+  });
+
+  const [isPremium, setIsPremium] = useState<boolean>(() => {
+    const saved = localStorage.getItem('isPremium');
+    const hasPromoCode = !!localStorage.getItem('usedPromoCode');
+    return saved === 'true' || hasPromoCode;
   });
 
   const trialDaysLeft = React.useMemo(() => {
