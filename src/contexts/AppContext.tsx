@@ -62,6 +62,7 @@ interface AppContextType {
   isPremium: boolean;
   setPremium: (value: boolean) => void;
   activatePromoCode: (code: string) => { success: boolean; message: string };
+  clearPromoCode: () => void;
   usedPromoCode: string | null;
   
   // Clear all data
@@ -111,11 +112,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return localStorage.getItem('usedPromoCode');
   });
 
-  const [isPremium, setIsPremium] = useState<boolean>(() => {
+  // "Store premium" is the purchase-based premium flag (RevenueCat / restore)
+  const [storePremium, setStorePremium] = useState<boolean>(() => {
     const saved = localStorage.getItem('isPremium');
-    const hasPromoCode = !!localStorage.getItem('usedPromoCode');
-    return saved === 'true' || hasPromoCode;
+    return saved === 'true';
   });
+
+  // Effective premium includes promo-code activation (so purchases can't override it)
+  const isPremium = storePremium || !!usedPromoCode;
 
   const trialDaysLeft = React.useMemo(() => {
     if (isPremium) return TRIAL_DAYS;
@@ -129,29 +133,34 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const isTrialExpired = !isPremium && trialDaysLeft === 0;
 
   const setPremium = (value: boolean) => {
-    setIsPremium(value);
+    setStorePremium(value);
     localStorage.setItem('isPremium', String(value));
+  };
+
+  const clearPromoCode = () => {
+    setUsedPromoCode(null);
+    localStorage.removeItem('usedPromoCode');
   };
 
   const activatePromoCode = (code: string): { success: boolean; message: string } => {
     const normalizedCode = code.trim().toUpperCase();
-    
-    // Allow re-applying if premium isn't active yet (sync fix)
-    if (usedPromoCode && isPremium) {
-      return { success: false, message: 'Premium is already activated.' };
+
+    // If a promo code is already applied, require clearing it first
+    if (usedPromoCode) {
+      return { success: false, message: 'Promo code already applied. Tap "Use different code" to change it.' };
     }
-    
+
     if (!normalizedCode) {
       return { success: false, message: 'Please enter a promo code.' };
     }
-    
+
     if (VALID_PROMO_CODES.includes(normalizedCode)) {
       setPremium(true);
       setUsedPromoCode(normalizedCode);
       localStorage.setItem('usedPromoCode', normalizedCode);
       return { success: true, message: 'Premium activated successfully!' };
     }
-    
+
     return { success: false, message: 'Invalid promo code. Please try again.' };
   };
 
@@ -299,7 +308,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setLearningList([]);
     setSeenQuestions([]);
     setSettings(defaultSettings);
-    setIsPremium(false);
+    setStorePremium(false);
+    setUsedPromoCode(null);
+    localStorage.removeItem('usedPromoCode');
     // Reset trial start date to now (restarts the 5-day trial)
     const now = new Date().toISOString();
     setTrialStartDate(now);
@@ -326,6 +337,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       isPremium,
       setPremium,
       activatePromoCode,
+      clearPromoCode,
       usedPromoCode,
       clearAllData,
     }}>
