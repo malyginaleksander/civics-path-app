@@ -629,8 +629,8 @@ export const questions: Question[] = [
   {
     id: 65,
     question: "What are three rights of everyone living in the United States?",
-    answers: ["Freedom of expression, speech, and assembly", "Vote, work, and travel", "Own guns, drive, and drink", "Only rights for citizens"],
-    correctAnswers: ["Freedom of expression", "Freedom of speech", "Freedom of assembly", "Freedom to petition the government", "Freedom of religion", "The right to bear arms", "Freedom of expression, speech, and assembly"],
+    answers: ["Freedom of expression",  "Freedom of speech", "Vote, work, and travel", "Freedom of religion", "Only rights for citizens", "Freedom of assembly"],
+    correctAnswers: ["Freedom of expression", "Freedom of speech", "Freedom of assembly", "Freedom to petition the government", "Freedom of religion", "The right to bear arms"],
     explanation: "Everyone in the U.S. has rights including freedom of expression, speech, assembly, petition, religion, and to bear arms.",
     category: 'government',
     seniorQuestion: false,
