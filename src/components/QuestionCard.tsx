@@ -36,7 +36,7 @@ export const QuestionCard = ({
     return shuffleArray(question.answers);
   }, [question.id]);
 
-  const isCorrect = selectedAnswer === question.correctAnswers[0];
+  const isCorrect = selectedAnswer ? question.correctAnswers.includes(selectedAnswer) : false;
   const inLearningList = isInLearningList(question.id);
 
   const handleSpeak = () => {
