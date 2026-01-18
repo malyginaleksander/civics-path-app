@@ -8,10 +8,12 @@ import { PageHeader } from '@/components/PageHeader';
 import { questions, getRandomQuestions, getQuestionById, Question } from '@/data/questions';
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
+import { getRequiredAnswerCount, validateMultipleAnswers } from '@/lib/questionUtils';
 
 interface Answer {
   questionId: number;
   selectedAnswer: string;
+  selectedAnswers?: string[];
   isCorrect: boolean;
 }
 
@@ -24,6 +26,7 @@ const PracticeTest = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>();
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [startTime, setStartTime] = useState(() => Date.now());
@@ -35,6 +38,7 @@ const PracticeTest = () => {
     setCurrentIndex(0);
     setAnswers([]);
     setSelectedAnswer(undefined);
+    setSelectedAnswers([]);
     setShowResult(false);
     setIsComplete(false);
     setTimeSpent(0);
@@ -80,7 +84,12 @@ const PracticeTest = () => {
 
   const currentQuestion = testQuestions[currentIndex];
   const progress = testQuestions.length > 0 ? ((currentIndex + 1) / testQuestions.length) * 100 : 0;
+  
+  // Check if current question requires multiple answers
+  const requiredCount = currentQuestion ? getRequiredAnswerCount(currentQuestion.question) : 1;
+  const isMultiSelect = requiredCount > 1;
 
+  // Handle single answer selection (immediate submit for single-answer questions)
   const handleSelectAnswer = (answer: string) => {
     if (showResult) return;
     setSelectedAnswer(answer);
@@ -96,10 +105,38 @@ const PracticeTest = () => {
     markQuestionAsSeen(currentQuestion.id);
   };
 
+  // Handle multiple answer selection (just update selection, don't submit yet)
+  const handleSelectMultipleAnswers = (answers: string[]) => {
+    if (showResult) return;
+    setSelectedAnswers(answers);
+  };
+
+  // Submit multiple answers
+  const handleSubmitMultipleAnswers = () => {
+    if (showResult) return;
+    setShowResult(true);
+
+    const { isCorrect } = validateMultipleAnswers(
+      selectedAnswers,
+      currentQuestion.correctAnswers,
+      requiredCount
+    );
+
+    setAnswers(prev => [...prev, {
+      questionId: currentQuestion.id,
+      selectedAnswer: selectedAnswers.join(', '),
+      selectedAnswers: selectedAnswers,
+      isCorrect,
+    }]);
+
+    markQuestionAsSeen(currentQuestion.id);
+  };
+
   const handleNext = () => {
     if (currentIndex < testQuestions.length - 1) {
       setCurrentIndex(prev => prev + 1);
       setSelectedAnswer(undefined);
+      setSelectedAnswers([]);
       setShowResult(false);
     } else {
       completeTest();
@@ -201,12 +238,17 @@ const PracticeTest = () => {
                 {wrongAnswers.map((answer, index) => {
                   const question = getQuestionById(answer.questionId);
                   if (!question) return null;
+                  const reqCount = getRequiredAnswerCount(question.question);
                   
                   return (
                     <div key={index} className="bg-card rounded-xl p-4 card-shadow">
                       <p className="font-medium text-foreground mb-2">{question.question}</p>
-                      <p className="text-sm text-destructive">Your answer: {answer.selectedAnswer}</p>
-                      <p className="text-sm text-success">Correct: {question.correctAnswers[0]}</p>
+                      <p className="text-sm text-destructive">
+                        Your answer: {answer.selectedAnswers?.join(', ') || answer.selectedAnswer}
+                      </p>
+                      <p className="text-sm text-success">
+                        Correct: {question.correctAnswers.slice(0, Math.max(reqCount, 1)).join(', ')}
+                      </p>
                     </div>
                   );
                 })}
@@ -274,9 +316,13 @@ const PracticeTest = () => {
           <QuestionCard
             question={currentQuestion}
             selectedAnswer={selectedAnswer}
-            onSelectAnswer={handleSelectAnswer}
+            selectedAnswers={selectedAnswers}
+            onSelectAnswer={isMultiSelect ? undefined : handleSelectAnswer}
+            onSelectMultipleAnswers={isMultiSelect ? handleSelectMultipleAnswers : undefined}
+            onSubmitMultipleAnswers={isMultiSelect ? handleSubmitMultipleAnswers : undefined}
             showResult={showResult}
             questionNumber={currentIndex + 1}
+            isMultiSelect={isMultiSelect}
           />
         )}
 

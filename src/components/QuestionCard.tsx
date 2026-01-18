@@ -1,42 +1,62 @@
 import { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp, Volume2, VolumeX, Bookmark, BookmarkCheck } from 'lucide-react';
+import { ChevronDown, ChevronUp, Volume2, VolumeX, Bookmark, BookmarkCheck, Check } from 'lucide-react';
 import { Question } from '@/data/questions';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn, shuffleArray } from '@/lib/utils';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useApp } from '@/contexts/AppContext';
-
+import { getRequiredAnswerCount, validateMultipleAnswers } from '@/lib/questionUtils';
 
 interface QuestionCardProps {
   question: Question;
   selectedAnswer?: string;
+  selectedAnswers?: string[];
   onSelectAnswer?: (answer: string) => void;
+  onSelectMultipleAnswers?: (answers: string[]) => void;
+  onSubmitMultipleAnswers?: () => void;
   showResult?: boolean;
   showExplanation?: boolean;
   isStudyMode?: boolean;
   questionNumber?: number;
+  isMultiSelect?: boolean;
 }
 
 export const QuestionCard = ({
   question,
   selectedAnswer,
+  selectedAnswers = [],
   onSelectAnswer,
+  onSelectMultipleAnswers,
+  onSubmitMultipleAnswers,
   showResult = false,
   showExplanation: initialShowExplanation = false,
   isStudyMode = false,
   questionNumber,
+  isMultiSelect = false,
 }: QuestionCardProps) => {
   const [showExplanation, setShowExplanation] = useState(initialShowExplanation);
   const { speak, stop, isSpeaking } = useTextToSpeech();
   const { isInLearningList, addToLearningList, removeFromLearningList } = useApp();
+
+  const requiredCount = getRequiredAnswerCount(question.question);
 
   // Shuffle answers once when question changes (using question.id as dependency)
   const shuffledAnswers = useMemo(() => {
     return shuffleArray(question.answers);
   }, [question.id]);
 
-  const isCorrect = selectedAnswer ? question.correctAnswers.includes(selectedAnswer) : false;
+  // For single select
+  const isCorrectSingle = selectedAnswer ? question.correctAnswers.includes(selectedAnswer) : false;
+  
+  // For multi select
+  const { isCorrect: isCorrectMulti, isComplete } = validateMultipleAnswers(
+    selectedAnswers,
+    question.correctAnswers,
+    requiredCount
+  );
+
+  const isCorrect = isMultiSelect ? isCorrectMulti : isCorrectSingle;
   const inLearningList = isInLearningList(question.id);
 
   const handleSpeak = () => {
@@ -44,7 +64,7 @@ export const QuestionCard = ({
       stop();
     } else {
       const textToSpeak = showResult 
-        ? `${question.question}. The correct answer is: ${question.correctAnswers[0]}`
+        ? `${question.question}. The correct answer is: ${question.correctAnswers.slice(0, requiredCount).join(', ')}`
         : question.question;
       speak(textToSpeak);
     }
@@ -55,6 +75,21 @@ export const QuestionCard = ({
       removeFromLearningList(question.id);
     } else {
       addToLearningList(question.id);
+    }
+  };
+
+  const handleAnswerClick = (answer: string) => {
+    if (showResult || isStudyMode) return;
+
+    if (isMultiSelect && onSelectMultipleAnswers) {
+      // Toggle selection for multi-select
+      if (selectedAnswers.includes(answer)) {
+        onSelectMultipleAnswers(selectedAnswers.filter(a => a !== answer));
+      } else {
+        onSelectMultipleAnswers([...selectedAnswers, answer]);
+      }
+    } else if (onSelectAnswer) {
+      onSelectAnswer(answer);
     }
   };
 
@@ -70,6 +105,11 @@ export const QuestionCard = ({
           <h3 className="text-lg font-semibold text-foreground leading-relaxed">
             {question.question}
           </h3>
+          {isMultiSelect && !showResult && (
+            <p className="text-sm text-primary mt-2">
+              Select {requiredCount} answer{requiredCount > 1 ? 's' : ''} ({selectedAnswers.length}/{requiredCount} selected)
+            </p>
+          )}
         </div>
         <div className="flex gap-1">
           <Button
@@ -101,7 +141,9 @@ export const QuestionCard = ({
 
       <div className="space-y-2 mb-4">
         {shuffledAnswers.map((answer, index) => {
-          const isSelected = selectedAnswer === answer;
+          const isSelected = isMultiSelect 
+            ? selectedAnswers.includes(answer) 
+            : selectedAnswer === answer;
           const isCorrectAnswer = question.correctAnswers.includes(answer);
           
           let answerStyle = 'bg-secondary hover:bg-accent border-transparent';
@@ -121,19 +163,33 @@ export const QuestionCard = ({
           return (
             <button
               key={index}
-              onClick={() => !showResult && onSelectAnswer?.(answer)}
+              onClick={() => handleAnswerClick(answer)}
               disabled={showResult || isStudyMode}
               className={cn(
-                'w-full p-4 rounded-lg text-left transition-all duration-200 border-2',
+                'w-full p-4 rounded-lg text-left transition-all duration-200 border-2 flex items-center justify-between',
                 answerStyle,
                 !showResult && !isStudyMode && 'cursor-pointer active:scale-[0.98]'
               )}
             >
               <span className="font-medium">{answer}</span>
+              {isMultiSelect && isSelected && !showResult && (
+                <Check size={20} className="text-primary shrink-0" />
+              )}
             </button>
           );
         })}
       </div>
+
+      {/* Submit button for multi-select */}
+      {isMultiSelect && !showResult && selectedAnswers.length >= requiredCount && onSubmitMultipleAnswers && (
+        <Button
+          onClick={onSubmitMultipleAnswers}
+          className="w-full mb-4"
+          size="lg"
+        >
+          Submit Answers
+        </Button>
+      )}
 
       {(showResult || isStudyMode) && (
         <div>
