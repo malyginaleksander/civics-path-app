@@ -4,16 +4,18 @@ export function getRequiredAnswerCount(questionText: string): number {
   
   // Match patterns like "name two", "name three", "what are three", etc.
   const patterns = [
-    { regex: /name\s+one|name\s+1/i, count: 1 },
-    { regex: /name\s+two|name\s+2/i, count: 2 },
-    { regex: /name\s+three|name\s+3/i, count: 3 },
-    { regex: /name\s+four|name\s+4/i, count: 4 },
-    { regex: /name\s+five|name\s+5/i, count: 5 },
-    { regex: /what\s+is\s+one|what\s+is\s+1/i, count: 1 },
-    { regex: /what\s+are\s+two|what\s+are\s+2/i, count: 2 },
-    { regex: /what\s+are\s+three|what\s+are\s+3/i, count: 3 },
-    { regex: /what\s+are\s+four|what\s+are\s+4/i, count: 4 },
-    { regex: /what\s+are\s+five|what\s+are\s+5/i, count: 5 },
+    { regex: /\bname\s+one\b|\bname\s+1\b/i, count: 1 },
+    { regex: /\bname\s+two\b|\bname\s+2\b/i, count: 2 },
+    { regex: /\bname\s+three\b|\bname\s+3\b/i, count: 3 },
+    { regex: /\bname\s+four\b|\bname\s+4\b/i, count: 4 },
+    { regex: /\bname\s+five\b|\bname\s+5\b/i, count: 5 },
+    { regex: /\bname\s+six\b|\bname\s+6\b/i, count: 6 },
+    { regex: /\bwhat\s+is\s+one\b|\bwhat\s+is\s+1\b/i, count: 1 },
+    { regex: /\bwhat\s+are\s+two\b|\bwhat\s+are\s+2\b/i, count: 2 },
+    { regex: /\bwhat\s+are\s+three\b|\bwhat\s+are\s+3\b/i, count: 3 },
+    { regex: /\bwhat\s+are\s+four\b|\bwhat\s+are\s+4\b/i, count: 4 },
+    { regex: /\bwhat\s+are\s+five\b|\bwhat\s+are\s+5\b/i, count: 5 },
+    { regex: /\bwhat\s+are\s+six\b|\bwhat\s+are\s+6\b/i, count: 6 },
   ];
   
   for (const { regex, count } of patterns) {
