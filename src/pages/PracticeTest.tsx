@@ -86,7 +86,7 @@ const PracticeTest = () => {
     setSelectedAnswer(answer);
     setShowResult(true);
 
-    const isCorrect = answer === currentQuestion.correctAnswers[0];
+    const isCorrect = currentQuestion.correctAnswers.includes(answer);
     setAnswers(prev => [...prev, {
       questionId: currentQuestion.id,
       selectedAnswer: answer,
