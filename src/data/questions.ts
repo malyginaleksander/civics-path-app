@@ -38,7 +38,7 @@ export const questions: Question[] = [
   {
     id: 1,
     question: "What is the form of government of the United States?",
-    answers: ["Republic", "Constitution-based federal republic", "Democracy", "Monarchy"],
+    answers: ["Republic", "Constitution-based federal republic", "Representative democracy", "Monarchy"],
     correctAnswers: ["Republic", "Constitution-based federal republic", "Representative democracy"],
     explanation: "The United States is a republic, also known as a constitution-based federal republic or representative democracy.",
     category: 'government',
@@ -74,7 +74,7 @@ export const questions: Question[] = [
   {
     id: 5,
     question: "How are changes made to the U.S. Constitution?",
-    answers: ["Amendments", "Executive orders", "Supreme Court decisions", "State laws"],
+    answers: ["Amendments", "The amendment process", "Executive orders", "Supreme Court decisions", "State laws"],
     correctAnswers: ["Amendments", "The amendment process"],
     explanation: "Changes to the Constitution are made through amendments. The amendment process is outlined in Article V.",
     category: 'government',
@@ -101,7 +101,7 @@ export const questions: Question[] = [
   {
     id: 8,
     question: "Why is the Declaration of Independence important?",
-    answers: ["It says America is free from British control", "It created the Constitution", "It freed the slaves", "It gave women the right to vote"],
+    answers: ["It says America is free from British control", "It says all people are created equal",  "It identifies inherent rights",  "It identifies individual freedoms", "It created the Constitution", "It freed the slaves", "It gave women the right to vote"],
     correctAnswers: ["It says America is free from British control", "It says all people are created equal", "It identifies inherent rights", "It identifies individual freedoms"],
     explanation: "The Declaration of Independence announced freedom from Britain, declared all people are created equal, and identified inherent rights and freedoms.",
     category: 'government',
@@ -119,8 +119,8 @@ export const questions: Question[] = [
   {
     id: 10,
     question: "Name two important ideas from the Declaration of Independence and the U.S. Constitution.",
-    answers: ["Equality and liberty", "Monarchy and dictatorship", "Slavery and taxation", "War and peace"],
-    correctAnswers: ["Equality", "Liberty", "Social contract", "Natural rights", "Limited government", "Self-government", "Equality and liberty"],
+    answers: ["Equality", "Liberty", "Social contract", "Natural rights", "Limited government", "Self-government", "Monarchy", "Dictatorship",  "Taxation"],
+    correctAnswers: ["Equality", "Liberty", "Social contract", "Natural rights", "Limited government", "Self-government"],
     explanation: "Important ideas include equality, liberty, social contract, natural rights, limited government, and self-government.",
     category: 'government',
     seniorQuestion: false,
@@ -146,7 +146,7 @@ export const questions: Question[] = [
   {
     id: 13,
     question: "What is the rule of law?",
-    answers: ["Everyone must follow the law", "Only citizens must follow the law", "The President makes all laws", "Laws are optional"],
+    answers: ["Everyone must follow the law", "Leaders must obey the law", "Government must obey the law", "No one is above the law", "Only citizens must follow the law", "The President makes all laws", "Laws are optional"],
     correctAnswers: ["Everyone must follow the law", "Leaders must obey the law", "Government must obey the law", "No one is above the law"],
     explanation: "The rule of law means everyone, including leaders and government, must follow the law. No one is above the law.",
     category: 'government',
@@ -155,7 +155,7 @@ export const questions: Question[] = [
   {
     id: 14,
     question: "Many documents influenced the U.S. Constitution. Name one.",
-    answers: ["Declaration of Independence", "Communist Manifesto", "Magna Carta of England", "French Constitution"],
+    answers: ["Declaration of Independence", "Virginia Declaration of Rights", "Communist Manifesto", "Magna Carta of England", "French Constitution"],
     correctAnswers: ["Declaration of Independence", "Articles of Confederation", "Federalist Papers", "Anti-Federalist Papers", "Virginia Declaration of Rights", "Fundamental Orders of Connecticut", "Mayflower Compact", "Iroquois Great Law of Peace"],
     explanation: "Documents that influenced the Constitution include the Declaration of Independence, Articles of Confederation, Federalist Papers, and Mayflower Compact.",
     category: 'government',
@@ -164,7 +164,7 @@ export const questions: Question[] = [
   {
     id: 15,
     question: "There are three branches of government. Why?",
-    answers: ["So one part does not become too powerful", "To create more jobs", "Because the Constitution requires it", "To have more leaders"],
+    answers: ["So one part does not become too powerful", "Checks and balances", "Separation of powers", "To create more jobs", "Because the Constitution requires it", "To have more leaders"],
     correctAnswers: ["So one part does not become too powerful", "Checks and balances", "Separation of powers"],
     explanation: "Three branches exist to prevent any one part from becoming too powerful through checks and balances and separation of powers.",
     category: 'government',
@@ -195,7 +195,7 @@ export const questions: Question[] = [
   {
     id: 18,
     question: "What part of the federal government writes laws?",
-    answers: ["(U.S.) Congress", "The President", "The Supreme Court", "State governors"],
+    answers: ["(U.S.) Congress", "(U.S. or national) legislature", "Legislative branch","The President", "The Supreme Court", "State governors"],
     correctAnswers: ["(U.S.) Congress", "(U.S. or national) legislature", "Legislative branch"],
     explanation: "Congress (the legislative branch) writes federal laws. It consists of the Senate and House of Representatives.",
     category: 'government',
@@ -286,7 +286,7 @@ export const questions: Question[] = [
   {
     id: 28,
     question: "Why does each state have two senators?",
-    answers: ["Equal representation (for small states)", "Because of population", "The President decided", "Random choice"],
+    answers: ["Equal representation (for small states)", "The Great Compromise (Connecticut Compromise)", "Because of population", "The President decided", "Random choice"],
     correctAnswers: ["Equal representation (for small states)", "The Great Compromise (Connecticut Compromise)"],
     explanation: "Each state has two senators for equal representation, especially for smaller states. This was part of the Great Compromise.",
     category: 'government',
@@ -315,7 +315,7 @@ export const questions: Question[] = [
   {
     id: 31,
     question: "Who does a U.S. senator represent?",
-    answers: ["Citizens of their state", "Only voters", "Only their party", "The President"],
+    answers: ["Citizens of their state",  "People of their state", "Only voters", "Only their party", "The President"],
     correctAnswers: ["Citizens of their state", "People of their state"],
     explanation: "A U.S. senator represents all citizens and people of their state.",
     category: 'government',
@@ -333,7 +333,7 @@ export const questions: Question[] = [
   {
     id: 33,
     question: "Who does a member of the House of Representatives represent?",
-    answers: ["Citizens in their (congressional) district", "The entire state", "The entire country", "Only voters"],
+    answers: ["Citizens in their (congressional) district", "People in their district", "The entire state", "The entire country", "Only voters"],
     correctAnswers: ["Citizens in their (congressional) district", "Citizens in their district", "People from their (congressional) district", "People in their district"],
     explanation: "A representative represents the citizens and people in their specific congressional district.",
     category: 'government',
@@ -351,7 +351,7 @@ export const questions: Question[] = [
   {
     id: 35,
     question: "Some states have more representatives than other states. Why?",
-    answers: ["(Because of) the state's population", "Because of size", "Because of age", "Random selection"],
+    answers: ["(Because of) the state's population", "(Because) they have more people", "Because of size", "Because of age", "Random selection"],
     correctAnswers: ["(Because of) the state's population", "(Because) they have more people", "(Because) some states have more people"],
     explanation: "States with larger populations have more representatives because House seats are apportioned based on population.",
     category: 'government',
@@ -470,8 +470,8 @@ export const questions: Question[] = [
   {
     id: 48,
     question: "What are two Cabinet-level positions?",
-    answers: ["Secretary of State and Secretary of Defense", "Senator and Representative", "Governor and Mayor", "Judge and Lawyer"],
-    correctAnswers: ["Attorney General", "Secretary of Agriculture", "Secretary of Commerce", "Secretary of Education", "Secretary of Energy", "Secretary of Health and Human Services", "Secretary of Homeland Security", "Secretary of Housing and Urban Development", "Secretary of the Interior", "Secretary of Labor", "Secretary of State", "Secretary of Transportation", "Secretary of the Treasury", "Secretary of Veterans Affairs", "Secretary of Defense", "Vice President", "Secretary of State and Secretary of Defense"],
+    answers: ["Secretary of Education", "Secretary of Energy", "Senator", "Representative", "Governor",  "Mayor", "Secretary of Defense", "Vice President"],
+    correctAnswers: ["Attorney General", "Secretary of Agriculture", "Secretary of Commerce", "Secretary of Education", "Secretary of Energy", "Secretary of Health and Human Services", "Secretary of Homeland Security", "Secretary of Housing and Urban Development", "Secretary of the Interior", "Secretary of Labor", "Secretary of State", "Secretary of Transportation", "Secretary of the Treasury", "Secretary of Veterans Affairs", "Secretary of Defense", "Vice President", ],
     explanation: "Cabinet positions include Secretary of State, Secretary of Defense, Attorney General, and many others.",
     category: 'government',
     seniorQuestion: false,
@@ -479,7 +479,7 @@ export const questions: Question[] = [
   {
     id: 49,
     question: "Why is the Electoral College important?",
-    answers: ["It decides who is elected president", "It makes laws", "It interprets laws", "It advises the President"],
+    answers: ["It decides who is elected president", "It provides a compromise between the popular election of the president and congressional selection", "It makes laws", "It interprets laws", "It advises the President"],
     correctAnswers: ["It decides who is elected president", "It provides a compromise between the popular election of the president and congressional selection"],
     explanation: "The Electoral College decides who is elected president, providing a compromise between popular vote and congressional selection.",
     category: 'government',
@@ -533,7 +533,7 @@ export const questions: Question[] = [
   {
     id: 55,
     question: "How long do Supreme Court justices serve?",
-    answers: ["(For) life", "Ten years", "Until age 70", "Six years"],
+    answers: ["(For) life", "Lifetime appointment", "(Until) retirement", "Ten years", "Until age 70", "Six years"],
     correctAnswers: ["(For) life", "Lifetime appointment", "(Until) retirement"],
     explanation: "Supreme Court justices serve for life, until retirement, or removal through impeachment.",
     category: 'government',
@@ -542,7 +542,7 @@ export const questions: Question[] = [
   {
     id: 56,
     question: "Supreme Court justices serve for life. Why?",
-    answers: ["To be independent (of politics)", "Because they are smart", "Because the Constitution says so", "To save money"],
+    answers: ["To be independent (of politics)", "To limit outside (political) influence", "Because they are smart", "Because the Constitution says so", "To save money"],
     correctAnswers: ["To be independent (of politics)", "To limit outside (political) influence"],
     explanation: "Lifetime appointments keep justices independent of politics and limit outside political influence.",
     category: 'government',
@@ -570,7 +570,7 @@ export const questions: Question[] = [
   {
     id: 59,
     question: "Name one power that is only for the states.",
-    answers: ["Provide schooling and education", "Print money", "Declare war", "Make treaties"],
+    answers: ["Provide schooling and education","Provide protection (police)", "Give a driver's license", "Print money", "Declare war", "Provide safety (fire departments)"],
     correctAnswers: ["Provide schooling and education", "Provide protection (police)", "Provide safety (fire departments)", "Give a driver's license", "Approve zoning and land use"],
     explanation: "State-only powers include education, police, fire departments, driver's licenses, and zoning.",
     category: 'government',
@@ -611,7 +611,7 @@ export const questions: Question[] = [
   {
     id: 63,
     question: "There are four amendments to the U.S. Constitution about who can vote. Describe one of them.",
-    answers: ["Citizens eighteen (18) and older (can vote)", "A male citizen of any race (can vote)", "Only property owners can vote", "Only educated people can vote"],
+    answers: ["Citizens eighteen (18) and older (can vote)", "Any citizen can vote. (Women and men can vote.)", "Only property owners can vote", "Only educated people can vote"],
     correctAnswers: ["Citizens eighteen (18) and older (can vote)", "You don't have to pay (a poll tax) to vote.", "Any citizen can vote. (Women and men can vote.)", "A male citizen of any race (can vote)"],
     explanation: "Voting amendments: 15th (race), 19th (women), 24th (no poll tax), 26th (age 18+).",
     category: 'government',
@@ -620,7 +620,7 @@ export const questions: Question[] = [
   {
     id: 64,
     question: "Who can vote in federal elections, run for federal office, and serve on a jury in the United States?",
-    answers: ["Citizens", "All residents", "Anyone over 18", "Legal immigrants"],
+    answers: ["U.S. citizens", "Citizens", "All residents", "Anyone over 18", "Legal immigrants"],
     correctAnswers: ["Citizens", "Citizens of the United States", "U.S. citizens"],
     explanation: "Only U.S. citizens can vote in federal elections, run for federal office, and serve on a jury.",
     category: 'government',
@@ -656,7 +656,7 @@ export const questions: Question[] = [
   {
     id: 68,
     question: "How can people become United States citizens?",
-    answers: ["Be born in the United States or naturalize", "Only by birth", "Only by marriage", "Only by military service"],
+    answers: ["Be born in the United States or naturalize", "Naturalize", "Only by birth", "Only by marriage", "Only by military service"],
     correctAnswers: ["Be born in the United States or naturalize", "Naturalize", "Derive citizenship (under conditions set by Congress)"],
     explanation: "People become citizens by birth in the U.S. (14th Amendment), naturalization, or deriving citizenship.",
     category: 'government',
@@ -665,7 +665,7 @@ export const questions: Question[] = [
   {
     id: 69,
     question: "What are two examples of civic participation in the United States?",
-    answers: ["Vote and run for office", "Pay taxes and watch TV", "Work and sleep", "Eat and travel"],
+    answers: ["Vote", "Run for office", "Pay taxes", "Work", "Join a political party", "Help with a campaign", "Join a civic group", "Join a community group"],
     correctAnswers: ["Vote", "Run for office", "Join a political party", "Help with a campaign", "Join a civic group", "Join a community group", "Give an elected official your opinion (on an issue)", "Contact elected officials", "Support or oppose an issue or policy", "Write to a newspaper", "Vote and run for office"],
     explanation: "Civic participation includes voting, running for office, joining groups, contacting officials, and being politically active.",
     category: 'government',
@@ -674,7 +674,7 @@ export const questions: Question[] = [
   {
     id: 70,
     question: "What is one way Americans can serve their country?",
-    answers: ["Vote", "Pay taxes", "Serve in the military", "Watch TV"],
+    answers: ["Vote", "Pay taxes", "Serve in the military", "Watch TV", "Run for office", "Work for local, state, or federal government"],
     correctAnswers: ["Vote", "Pay taxes", "Obey the law", "Serve in the military", "Run for office", "Work for local, state, or federal government"],
     explanation: "Americans serve their country by voting, paying taxes, obeying laws, military service, or government work.",
     category: 'government',
@@ -706,7 +706,7 @@ export const questions: Question[] = [
   {
     id: 73,
     question: "The colonists came to America for many reasons. Name one.",
-    answers: ["Freedom", "Religious freedom", "Economic opportunity", "To escape the law"],
+    answers: ["Freedom", "Religious freedom", "Economic opportunity", "To escape the law", "Political liberty"],
     correctAnswers: ["Freedom", "Political liberty", "Religious freedom", "Economic opportunity", "Escape persecution"],
     explanation: "Colonists came for freedom, political liberty, religious freedom, economic opportunity, and to escape persecution.",
     category: 'history',
@@ -715,7 +715,7 @@ export const questions: Question[] = [
   {
     id: 74,
     question: "Who lived in America before the Europeans arrived?",
-    answers: ["American Indians", "British", "Spanish", "No one"],
+    answers: ["American Indians", "Native Americans", "British", "Spanish", "No one"],
     correctAnswers: ["American Indians", "Native Americans"],
     explanation: "American Indians (Native Americans) lived in America for thousands of years before Europeans arrived.",
     category: 'history',
@@ -724,7 +724,7 @@ export const questions: Question[] = [
   {
     id: 75,
     question: "What group of people was taken and sold as slaves?",
-    answers: ["Africans", "Europeans", "Asians", "Native Americans"],
+    answers: ["Africans", "People from Africa", "Europeans", "Asians", "Native Americans"],
     correctAnswers: ["Africans", "People from Africa"],
     explanation: "Africans (people from Africa) were taken and sold as slaves in America from the 1600s until the Civil War.",
     category: 'history',
@@ -778,8 +778,8 @@ export const questions: Question[] = [
   {
     id: 81,
     question: "There were 13 original states. Name five.",
-    answers: ["New York, New Jersey, Pennsylvania, Delaware, Maryland", "California, Texas, Florida, Ohio, Michigan", "Alaska, Hawaii, Arizona, Nevada, Oregon", "All states joined at once"],
-    correctAnswers: ["New Hampshire", "Massachusetts", "Rhode Island", "Connecticut", "New York, New Jersey, Pennsylvania, Delaware, Maryland", "Virginia", "North Carolina", "South Carolina", "Georgia"],
+    answers: ["New York", "New Jersey", "Pennsylvania", "Delaware", "Maryland", "California", "Texas", "Florida", "Ohio", "Michigan", "Alaska", "Hawaii", "Arizona", "Nevada", "Oregon"],
+    correctAnswers: ["New Hampshire", "Massachusetts", "Rhode Island", "Connecticut", "New York", "New Jersey", "Pennsylvania", "Delaware", "Maryland", "Virginia", "North Carolina", "South Carolina", "Georgia"],
     explanation: "The 13 original states (colonies) were NH, MA, RI, CT, NY, NJ, PA, DE, MD, VA, NC, SC, and GA.",
     category: 'history',
     seniorQuestion: false,
@@ -796,7 +796,7 @@ export const questions: Question[] = [
   {
     id: 83,
     question: "The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",
-    answers: ["(James) Madison", "(Alexander) Hamilton", "(John) Jay", "Thomas Jefferson"],
+    answers: ["(James) Madison", "(Alexander) Hamilton", "(John) Jay", "(Thomas) Jefferson"],
     correctAnswers: ["(James) Madison", "(Alexander) Hamilton", "(John) Jay", "Publius"],
     explanation: "The Federalist Papers were written by Madison, Hamilton, and Jay under the pen name Publius.",
     category: 'history',
@@ -805,8 +805,8 @@ export const questions: Question[] = [
   {
     id: 84,
     question: "Why were the Federalist Papers important?",
-    answers: ["They helped people understand the (U.S.) Constitution", "They declared independence", "They freed slaves", "They started the war"],
-    correctAnswers: ["They helped people understand the (U.S.) Constitution", "They supported passing the (U.S.) Constitution."],
+    answers: ["They helped people understand the (U.S.) Constitution", "They declared independence", "They freed slaves", "They started the war",  "They supported passing the (U.S.) Constitution"],
+    correctAnswers: ["They helped people understand the (U.S.) Constitution", "They supported passing the (U.S.) Constitution"],
     explanation: "The Federalist Papers explained the Constitution and helped convince states to ratify it.",
     category: 'history',
     seniorQuestion: false,
@@ -823,7 +823,7 @@ export const questions: Question[] = [
   {
     id: 86,
     question: "George Washington is famous for many things. Name one.",
-    answers: ["\"Father of Our Country\"", "First president", "General of the Continental Army", "Wrote the Declaration"],
+    answers: ["\"Father of Our Country\"", "First president of the United States", "General of the Continental Army", "Wrote the Declaration"],
     correctAnswers: ["\"Father of Our Country\"", "First president of the United States", "General of the Continental Army", "President of the Constitutional Convention"],
     explanation: "Washington was the \"Father of Our Country,\" first president, Continental Army general, and Constitutional Convention president.",
     category: 'history',
@@ -841,7 +841,7 @@ export const questions: Question[] = [
   {
     id: 88,
     question: "James Madison is famous for many things. Name one.",
-    answers: ["\"Father of the Constitution\"", "Fourth president of the United States", "First president", "Civil War general"],
+    answers: ["\"Father of the Constitution\"", "Fourth president of the United States", "First president of the United States", "Civil War general"],
     correctAnswers: ["\"Father of the Constitution\"", "Fourth president of the United States", "President during the War of 1812", "One of the writers of the Federalist Papers"],
     explanation: "Madison is the \"Father of the Constitution,\" 4th president, War of 1812 president, and Federalist Papers author.",
     category: 'history',
@@ -850,7 +850,7 @@ export const questions: Question[] = [
   {
     id: 89,
     question: "Alexander Hamilton is famous for many things. Name one.",
-    answers: ["First Secretary of the Treasury", "One of the writers of the Federalist Papers", "First president", "Wrote Declaration"],
+    answers: ["First Secretary of the Treasury", "One of the writers of the Federalist Papers", "First president of the United States", "Wrote Declaration"],
     correctAnswers: ["First Secretary of the Treasury", "One of the writers of the Federalist Papers", "Helped establish the First Bank of the United States", "Aide to General George Washington", "Member of the Continental Congress"],
     explanation: "Hamilton was 1st Treasury Secretary, Federalist Papers author, established First Bank, and aide to Washington.",
     category: 'history',
@@ -863,7 +863,7 @@ export const questions: Question[] = [
   {
     id: 90,
     question: "What territory did the United States buy from France in 1803?",
-    answers: ["Louisiana Territory", "Florida", "Alaska", "California"],
+    answers: ["Louisiana", "Florida", "Alaska", "California"],
     correctAnswers: ["Louisiana Territory", "Louisiana"],
     explanation: "The Louisiana Purchase (1803) doubled the size of the United States for $15 million.",
     category: 'history',
@@ -872,7 +872,7 @@ export const questions: Question[] = [
   {
     id: 91,
     question: "Name one war fought by the United States in the 1800s.",
-    answers: ["War of 1812", "Civil War", "World War I", "Revolutionary War"],
+    answers: ["War of 1812", "Civil War", "World War I", "Revolutionary War", "Mexican-American War", "Spanish-American War"],
     correctAnswers: ["War of 1812", "Mexican-American War", "Civil War", "Spanish-American War"],
     explanation: "Wars in the 1800s include War of 1812, Mexican-American War, Civil War, and Spanish-American War.",
     category: 'history',
@@ -908,7 +908,7 @@ export const questions: Question[] = [
   {
     id: 95,
     question: "What did the Emancipation Proclamation do?",
-    answers: ["Freed the slaves", "Started the Civil War", "Ended World War I", "Created the Constitution"],
+    answers: ["Freed the slaves", "Started the Civil War", "Ended World War I", "Created the Constitution", "Freed slaves in most Southern states"],
     correctAnswers: ["Freed the slaves", "Freed slaves in the Confederacy", "Freed slaves in the Confederate states", "Freed slaves in most Southern states"],
     explanation: "The Emancipation Proclamation (1863) freed slaves in Confederate states during the Civil War.",
     category: 'history',
@@ -935,7 +935,7 @@ export const questions: Question[] = [
   {
     id: 98,
     question: "When did all men get the right to vote?",
-    answers: ["After the Civil War", "During Reconstruction", "(With the) 15th Amendment", "1870"],
+    answers: ["After the Civil War", "During Reconstruction", "(With the) 15th Amendment", "1870", "1920"],
     correctAnswers: ["After the Civil War", "During Reconstruction", "(With the) 15th Amendment", "1870"],
     explanation: "The 15th Amendment (1870) gave all male citizens the right to vote regardless of race.",
     category: 'history',
@@ -944,7 +944,7 @@ export const questions: Question[] = [
   {
     id: 99,
     question: "Name one leader of the women's rights movement in the 1800s.",
-    answers: ["Susan B. Anthony", "Elizabeth Cady Stanton", "Rosa Parks", "Hillary Clinton"],
+    answers: ["Susan B. Anthony", "Elizabeth Cady Stanton", "Rosa Parks", "Hillary Clinton", "Lucy Stone"],
     correctAnswers: ["Susan B. Anthony", "Elizabeth Cady Stanton", "Sojourner Truth", "Harriet Tubman", "Lucretia Mott", "Lucy Stone"],
     explanation: "Women's rights leaders include Anthony, Stanton, Sojourner Truth, Tubman, Mott, and Stone.",
     category: 'history',
@@ -975,7 +975,7 @@ export const questions: Question[] = [
   {
     id: 102,
     question: "When did all women get the right to vote?",
-    answers: ["1920", "1776", "1865", "1950"],
+    answers: ["1920", "1776", "1865", "1950", "After World War I", "(With the) 19th Amendment"],
     correctAnswers: ["1920", "After World War I", "(With the) 19th Amendment"],
     explanation: "The 19th Amendment (1920) gave women the right to vote after World War I.",
     category: 'history',
@@ -1011,7 +1011,7 @@ export const questions: Question[] = [
   {
     id: 106,
     question: "Why did the United States enter World War II?",
-    answers: ["(Bombing of) Pearl Harbor", "To stop Hitler", "To support Britain", "Economic reasons"],
+    answers: ["(Bombing of) Pearl Harbor", "To stop Hitler", "To support Britain", "Economic reasons", "To support the Allied Powers (England, France, and Russia)"],
     correctAnswers: ["(Bombing of) Pearl Harbor", "Japanese attacked Pearl Harbor", "To support the Allied Powers (England, France, and Russia)", "To oppose the Axis Powers (Germany, Italy, and Japan)"],
     explanation: "The U.S. entered WWII after Japan bombed Pearl Harbor on December 7, 1941.",
     category: 'history',
@@ -1020,7 +1020,7 @@ export const questions: Question[] = [
   {
     id: 107,
     question: "Dwight Eisenhower is famous for many things. Name one.",
-    answers: ["General during World War II", "President during Korean War", "34th president of the United States", "Writer of Declaration of Independence"],
+    answers: ["General during World War II", "President at the end of (during) the Korean War", "34th president of the United States", "Writer of Declaration of Independence"],
     correctAnswers: ["General during World War II", "President at the end of (during) the Korean War", "34th president of the United States", "Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"],
     explanation: "Eisenhower was a WWII general, 34th president, ended Korean War, and created the Interstate System.",
     category: 'history',
@@ -1029,7 +1029,7 @@ export const questions: Question[] = [
   {
     id: 108,
     question: "Who was the United States' main rival during the Cold War?",
-    answers: ["Soviet Union", "Germany", "Japan", "China"],
+    answers: ["USSR", "Germany", "Japan", "China"],
     correctAnswers: ["Soviet Union", "USSR", "Russia"],
     explanation: "The Soviet Union (USSR/Russia) was America's main rival during the Cold War (1947-1991).",
     category: 'history',
@@ -1074,7 +1074,7 @@ export const questions: Question[] = [
   {
     id: 113,
     question: "Martin Luther King, Jr. is famous for many things. Name one.",
-    answers: ["Fought for civil rights", "Worked for equality for all Americans", "Was the first Black president", "Started the Civil War"],
+    answers: ["Fought for civil rights", "Worked for equality for all Americans", "Was the first Black president", "Worked to ensure that people would \"not be judged by the color of their skin, but by the content of their character\""],
     correctAnswers: ["Fought for civil rights", "Worked for equality for all Americans", "Worked to ensure that people would \"not be judged by the color of their skin, but by the content of their character\""],
     explanation: "MLK fought for civil rights, equality, and judging people by character rather than skin color.",
     category: 'history',
@@ -1083,7 +1083,7 @@ export const questions: Question[] = [
   {
     id: 114,
     question: "Why did the United States enter the Persian Gulf War?",
-    answers: ["To force the Iraqi military from Kuwait", "To stop communism", "Pearl Harbor", "For oil"],
+    answers: ["To force the Iraqi military from Kuwait", "To stop the spread of communism", "Pearl Harbor", "For oil"],
     correctAnswers: ["To force the Iraqi military from Kuwait"],
     explanation: "The U.S. entered the Persian Gulf War (1990-1991) to force Iraq's military out of Kuwait.",
     category: 'history',
@@ -1119,7 +1119,7 @@ export const questions: Question[] = [
   {
     id: 118,
     question: "Name one example of an American innovation.",
-    answers: ["Light bulb", "Automobile", "Airplane", "The wheel"],
+    answers: ["Light bulb", "Automobile (cars, internal combustion engine)", "Airplane", "The wheel"],
     correctAnswers: ["Light bulb", "Automobile (cars, internal combustion engine)", "Skyscrapers", "Airplane", "Assembly line", "Landing on the moon", "Integrated circuit (IC)"],
     explanation: "American innovations include the light bulb, automobile, airplane, assembly line, moon landing, and integrated circuit.",
     category: 'history',
@@ -1142,7 +1142,7 @@ export const questions: Question[] = [
   {
     id: 120,
     question: "Where is the Statue of Liberty?",
-    answers: ["New York (Harbor)", "Liberty Island", "Washington, D.C.", "California"],
+    answers: ["New York (Harbor)", "Liberty Island", "Washington, D.C.", "California", "near New York City"],
     correctAnswers: ["New York (Harbor)", "Liberty Island", "New Jersey", "near New York City", "on the Hudson (River)"],
     explanation: "The Statue of Liberty is in New York Harbor on Liberty Island.",
     category: 'civics',
@@ -1160,7 +1160,7 @@ export const questions: Question[] = [
   {
     id: 122,
     question: "Why does the flag have 50 stars?",
-    answers: ["(Because there is) one star for each state", "50 presidents", "50 colonies", "Random number"],
+    answers: ["(Because there is) one star for each state", "(Because there are) 50 states", "50 presidents", "50 colonies", "Random number"],
     correctAnswers: ["(Because there is) one star for each state", "(Because) each star represents a state", "(Because there are) 50 states"],
     explanation: "The 50 stars represent the 50 states in the United States today.",
     category: 'civics',
@@ -1200,7 +1200,7 @@ export const questions: Question[] = [
   {
     id: 126,
     question: "Name three national U.S. holidays.",
-    answers: ["New Year's Day, Independence Day, Thanksgiving", "Monday, Tuesday, Wednesday", "Spring, Summer, Fall", "Christmas, Easter, Halloween"],
+    answers: ["New Year's Day", "Independence Day", "Thanksgiving", "Presidents Day (Washington's Birthday)", "Memorial Day", "Juneteenth", "Independence Day", "Labor Day", "Columbus Day", "Veterans Day", "Thanksgiving Day"],
     correctAnswers: ["New Year's Day", "Martin Luther King, Jr. Day", "Presidents Day (Washington's Birthday)", "Memorial Day", "Juneteenth", "Independence Day", "Labor Day", "Columbus Day", "Veterans Day", "Thanksgiving Day", "Christmas Day", "New Year's Day, Independence Day, Thanksgiving"],
     explanation: "National holidays include New Year's, MLK Day, Presidents Day, Memorial Day, Juneteenth, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving, and Christmas.",
     category: 'civics',
