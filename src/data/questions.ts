@@ -305,8 +305,8 @@ export const questions: Question[] = [
   {
     id: 30,
     question: "What is the name of the Speaker of the House of Representatives now?",
-    answers: ["Visit uscis.gov/citizenship/testupdates", "The Vice President", "The President", "The Chief Justice"],
-    correctAnswers: ["Visit uscis.gov/citizenship/testupdates"],
+    answers: ["Visit uscis.gov/citizenship/testupdates", "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
+    correctAnswers: ["Visit uscis.gov/citizenship/testupdates", "Mike Johnson"],
     explanation: "The Speaker of the House is elected by House members. Check uscis.gov/citizenship/testupdates for the current name.",
     category: 'government',
     seniorQuestion: true,
@@ -378,8 +378,8 @@ export const questions: Question[] = [
   {
     id: 38,
     question: "What is the name of the President of the United States now?",
-    answers: ["Visit uscis.gov/citizenship/testupdates", "The Vice President", "The Speaker", "The Chief Justice"],
-    correctAnswers: ["Visit uscis.gov/citizenship/testupdates"],
+    answers: ["Visit uscis.gov/citizenship/testupdates", "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
+    correctAnswers: ["Visit uscis.gov/citizenship/testupdates", "Donald J. Trump"],
     explanation: "The President changes with elections. Check uscis.gov/citizenship/testupdates for the current name.",
     category: 'government',
     seniorQuestion: true,
@@ -388,8 +388,8 @@ export const questions: Question[] = [
   {
     id: 39,
     question: "What is the name of the Vice President of the United States now?",
-    answers: ["Visit uscis.gov/citizenship/testupdates", "The President", "The Speaker", "The Chief Justice"],
-    correctAnswers: ["Visit uscis.gov/citizenship/testupdates"],
+    answers: ["Visit uscis.gov/citizenship/testupdates", "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
+    correctAnswers: ["Visit uscis.gov/citizenship/testupdates", "JD Vance"],
     explanation: "The Vice President changes with elections. Check uscis.gov/citizenship/testupdates for the current name.",
     category: 'government',
     seniorQuestion: true,
@@ -551,8 +551,8 @@ export const questions: Question[] = [
   {
     id: 57,
     question: "Who is the Chief Justice of the United States now?",
-    answers: ["Visit uscis.gov/citizenship/testupdates", "The President", "The Vice President", "The Speaker"],
-    correctAnswers: ["Visit uscis.gov/citizenship/testupdates"],
+    answers: ["Visit uscis.gov/citizenship/testupdates", "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
+    correctAnswers: ["Visit uscis.gov/citizenship/testupdates", "John G. Roberts, Jr."],
     explanation: "Check uscis.gov/citizenship/testupdates for the current Chief Justice's name.",
     category: 'government',
     seniorQuestion: false,
