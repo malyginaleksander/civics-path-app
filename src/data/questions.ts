@@ -588,7 +588,7 @@ export const questions: Question[] = [
   {
     id: 61,
     question: "Who is the governor of your state now?",
-    answers: ["Answers will vary by state", "The President", "The Mayor", "The Senator"],
+    answers: ["Answers will vary by state", "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
     correctAnswers: ["Answers will vary by state"],
     explanation: "Each state has its own governor. You should know your state's current governor. D.C. does not have a governor.",
     category: 'government',
