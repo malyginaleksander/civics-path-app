@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp, Volume2, VolumeX, Bookmark, BookmarkCheck, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Volume2, VolumeX, Bookmark, BookmarkCheck, Check, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Question } from '@/data/questions';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { cn, shuffleArray } from '@/lib/utils';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { useApp } from '@/contexts/AppContext';
 import { getRequiredAnswerCount, validateMultipleAnswers } from '@/lib/questionUtils';
+import { getDynamicAnswers } from '@/lib/dynamicAnswers';
 
 interface QuestionCardProps {
   question: Question;
@@ -37,22 +39,33 @@ export const QuestionCard = ({
 }: QuestionCardProps) => {
   const [showExplanation, setShowExplanation] = useState(initialShowExplanation);
   const { speak, stop, isSpeaking } = useTextToSpeech();
-  const { isInLearningList, addToLearningList, removeFromLearningList } = useApp();
+  const { isInLearningList, addToLearningList, removeFromLearningList, settings } = useApp();
+  const navigate = useNavigate();
 
   const requiredCount = getRequiredAnswerCount(question.question);
 
+  // Get dynamic answers if applicable
+  const dynamicData = useMemo(() => {
+    return getDynamicAnswers(question, settings.selectedState);
+  }, [question.id, settings.selectedState]);
+
+  // Use dynamic answers if available, otherwise use question's answers
+  const effectiveAnswers = dynamicData?.answers || question.answers;
+  const effectiveCorrectAnswers = dynamicData?.correctAnswers || question.correctAnswers;
+  const needsStateSelection = dynamicData?.needsStateSelection || false;
+
   // Shuffle answers once when question changes (using question.id as dependency)
   const shuffledAnswers = useMemo(() => {
-    return shuffleArray(question.answers);
-  }, [question.id]);
+    return shuffleArray(effectiveAnswers);
+  }, [question.id, effectiveAnswers]);
 
   // For single select
-  const isCorrectSingle = selectedAnswer ? question.correctAnswers.includes(selectedAnswer) : false;
+  const isCorrectSingle = selectedAnswer ? effectiveCorrectAnswers.includes(selectedAnswer) : false;
   
   // For multi select
   const { isCorrect: isCorrectMulti, isComplete } = validateMultipleAnswers(
     selectedAnswers,
-    question.correctAnswers,
+    effectiveCorrectAnswers,
     requiredCount
   );
 
@@ -64,7 +77,7 @@ export const QuestionCard = ({
       stop();
     } else {
       const textToSpeak = showResult 
-        ? `${question.question}. The correct answer is: ${question.correctAnswers.slice(0, requiredCount).join(', ')}`
+        ? `${question.question}. The correct answer is: ${effectiveCorrectAnswers.slice(0, requiredCount).join(', ')}`
         : question.question;
       speak(textToSpeak);
     }
@@ -105,6 +118,11 @@ export const QuestionCard = ({
           <h3 className="text-lg font-semibold text-foreground leading-relaxed">
             {question.question}
           </h3>
+          {question.dynamicAnswer && (
+            <span className="inline-block mt-1 px-2 py-0.5 bg-warning/10 text-warning text-xs font-medium rounded">
+              Answer varies • Updated Jan 2025
+            </span>
+          )}
           {isMultiSelect && !showResult && (
             <p className="text-sm text-primary mt-2">
               Select {requiredCount} answer{requiredCount > 1 ? 's' : ''} ({selectedAnswers.length}/{requiredCount} selected)
@@ -139,12 +157,33 @@ export const QuestionCard = ({
         </div>
       </div>
 
+      {/* State selection needed warning */}
+      {needsStateSelection && (
+        <div className="mb-4 p-4 bg-warning/10 border border-warning/20 rounded-lg flex items-start gap-3">
+          <AlertCircle size={20} className="text-warning shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium text-warning">State selection required</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {dynamicData?.hint || "Please select your state in Settings to see the correct answers."}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              onClick={() => navigate('/settings')}
+            >
+              Go to Settings
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-2 mb-4">
         {shuffledAnswers.map((answer, index) => {
           const isSelected = isMultiSelect 
             ? selectedAnswers.includes(answer) 
             : selectedAnswer === answer;
-          const isCorrectAnswer = question.correctAnswers.includes(answer);
+          const isCorrectAnswer = effectiveCorrectAnswers.includes(answer);
           
           let answerStyle = 'bg-secondary hover:bg-accent border-transparent';
           

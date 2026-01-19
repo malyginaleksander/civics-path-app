@@ -31,6 +31,7 @@ interface Settings {
   audioAutoplay: boolean;
   reminderTime: string | null;
   seniorMode: boolean; // 65/20 rule - only show 20 specially marked questions
+  selectedState: string | null; // User's state for dynamic answer questions
 }
 
 const TRIAL_DAYS = 5;
@@ -77,6 +78,7 @@ const defaultSettings: Settings = {
   audioAutoplay: false,
   reminderTime: null,
   seniorMode: false,
+  selectedState: null,
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);

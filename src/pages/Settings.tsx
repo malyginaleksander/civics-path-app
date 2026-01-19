@@ -1,15 +1,17 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
 const Settings = () => {
   const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, clearPromoCode, usedPromoCode } = useApp();
@@ -257,6 +259,79 @@ const Settings = () => {
           <h2 className="text-lg font-bold text-foreground mb-4">Test Options</h2>
           
           <div className="bg-card rounded-xl card-shadow overflow-hidden">
+            {/* State Selection */}
+            <div className="p-4 border-b border-border">
+              <div className="flex items-center gap-3 mb-3">
+                <MapPin size={20} className="text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-foreground">Your State</p>
+                  <p className="text-sm text-muted-foreground">
+                    For state-specific questions (governor, senators, capital)
+                  </p>
+                </div>
+              </div>
+              <div className="ml-8">
+                <Select
+                  value={settings.selectedState || ''}
+                  onValueChange={(value) => updateSettings({ selectedState: value || null })}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your state..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statesData.map((state) => (
+                      <SelectItem key={state.abbreviation} value={state.name}>
+                        {state.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {settings.selectedState && (
+                  <div className="mt-3 p-3 bg-muted/50 rounded-lg text-sm">
+                    {(() => {
+                      const state = getStateData(settings.selectedState);
+                      if (!state) return null;
+                      return (
+                        <>
+                          <p><strong>Capital:</strong> {state.capital}</p>
+                          <p><strong>Governor:</strong> {state.governor}</p>
+                          <p><strong>Senators:</strong> {state.senators.join(', ')}</p>
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Federal Officials Info */}
+            <div className="p-4 border-b border-border">
+              <div className="flex items-center gap-3 mb-3">
+                <Info size={20} className="text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-foreground">Current Federal Officials</p>
+                  <p className="text-sm text-muted-foreground">
+                    Last updated: {federalOfficials.lastUpdated}
+                  </p>
+                </div>
+              </div>
+              <div className="ml-8 p-3 bg-muted/50 rounded-lg text-sm space-y-1">
+                <p><strong>President:</strong> {federalOfficials.president}</p>
+                <p><strong>Vice President:</strong> {federalOfficials.vicePresident}</p>
+                <p><strong>Speaker of House:</strong> {federalOfficials.speakerOfHouse}</p>
+                <p><strong>Chief Justice:</strong> {federalOfficials.chiefJustice}</p>
+                <a 
+                  href="https://www.uscis.gov/citizenship/testupdates"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline block mt-2"
+                >
+                  Verify at uscis.gov →
+                </a>
+              </div>
+            </div>
+
+            {/* Senior Mode */}
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Users size={20} className="text-muted-foreground" />

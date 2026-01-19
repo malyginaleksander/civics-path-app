@@ -9,6 +9,7 @@ import { questions, getRandomQuestions, getQuestionById, Question, getSeniorQues
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { getRequiredAnswerCount, validateMultipleAnswers } from '@/lib/questionUtils';
+import { getDynamicAnswers } from '@/lib/dynamicAnswers';
 
 interface Answer {
   questionId: number;
@@ -102,7 +103,11 @@ const PracticeTest = () => {
     setSelectedAnswer(answer);
     setShowResult(true);
 
-    const isCorrect = currentQuestion.correctAnswers.includes(answer);
+    // Get effective correct answers (dynamic or static)
+    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState);
+    const effectiveCorrectAnswers = dynamicData?.correctAnswers || currentQuestion.correctAnswers;
+
+    const isCorrect = effectiveCorrectAnswers.includes(answer);
     setAnswers(prev => [...prev, {
       questionId: currentQuestion.id,
       selectedAnswer: answer,
@@ -123,9 +128,13 @@ const PracticeTest = () => {
     if (showResult) return;
     setShowResult(true);
 
+    // Get effective correct answers (dynamic or static)
+    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState);
+    const effectiveCorrectAnswers = dynamicData?.correctAnswers || currentQuestion.correctAnswers;
+
     const { isCorrect } = validateMultipleAnswers(
       selectedAnswers,
-      currentQuestion.correctAnswers,
+      effectiveCorrectAnswers,
       requiredCount
     );
 
@@ -247,6 +256,10 @@ const PracticeTest = () => {
                   if (!question) return null;
                   const reqCount = getRequiredAnswerCount(question.question);
                   
+                  // Get effective correct answers (dynamic or static)
+                  const dynamicData = getDynamicAnswers(question, settings.selectedState);
+                  const effectiveCorrectAnswers = dynamicData?.correctAnswers || question.correctAnswers;
+                  
                   return (
                     <div key={index} className="bg-card rounded-xl p-4 card-shadow">
                       <p className="font-medium text-foreground mb-2">{question.question}</p>
@@ -254,7 +267,7 @@ const PracticeTest = () => {
                         Your answer: {answer.selectedAnswers?.join(', ') || answer.selectedAnswer}
                       </p>
                       <p className="text-sm text-success">
-                        Correct: {question.correctAnswers.slice(0, Math.max(reqCount, 1)).join(', ')}
+                        Correct: {effectiveCorrectAnswers.slice(0, Math.max(reqCount, 1)).join(', ')}
                       </p>
                     </div>
                   );
