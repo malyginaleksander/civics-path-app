@@ -5,7 +5,7 @@ import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { questions, categories, Question } from '@/data/questions';
+import { questions, categories, Question, getAllSeniorQuestions } from '@/data/questions';
 import { useApp } from '@/contexts/AppContext';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { cn } from '@/lib/utils';
@@ -19,18 +19,21 @@ const StudyMode = () => {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(initialCategory);
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
   
-  const { seenQuestions, markQuestionAsSeen, isInLearningList, addToLearningList, removeFromLearningList } = useApp();
+  const { seenQuestions, markQuestionAsSeen, isInLearningList, addToLearningList, removeFromLearningList, settings } = useApp();
   const { speak, stop, isSpeaking } = useTextToSpeech();
 
+  // Get the base questions list based on senior mode
+  const baseQuestions = settings.seniorMode ? getAllSeniorQuestions() : questions;
+
   const filteredQuestions = useMemo(() => {
-    if (!searchQuery) return questions;
+    if (!searchQuery) return baseQuestions;
     
     const query = searchQuery.toLowerCase();
-    return questions.filter(q => 
+    return baseQuestions.filter(q => 
       q.question.toLowerCase().includes(query) ||
       q.answers.some(a => a.toLowerCase().includes(query))
     );
-  }, [searchQuery]);
+  }, [searchQuery, baseQuestions]);
 
   const questionsByCategory = useMemo(() => {
     const grouped: Record<string, Question[]> = {
@@ -85,7 +88,10 @@ const StudyMode = () => {
 
   return (
     <Layout>
-      <PageHeader title="Study All Questions" subtitle={`${questions.length} official USCIS questions`} />
+      <PageHeader 
+        title={settings.seniorMode ? "Senior Questions (65/20)" : "Study All Questions"} 
+        subtitle={`${baseQuestions.length} ${settings.seniorMode ? 'specially marked' : 'official USCIS'} questions`} 
+      />
 
       <div className="px-4 py-4 max-w-3xl mx-auto">
         {/* Search Bar */}
