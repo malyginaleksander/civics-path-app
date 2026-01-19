@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, ChevronDown, ChevronUp, Volume2 } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Search, ChevronDown, ChevronUp, Volume2, AlertCircle } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Input } from '@/components/ui/input';
@@ -10,8 +10,10 @@ import { useApp } from '@/contexts/AppContext';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { cn } from '@/lib/utils';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { getDynamicAnswers } from '@/lib/dynamicAnswers';
 
 const StudyMode = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') as Question['category'] | null;
   
@@ -72,7 +74,10 @@ const StudyMode = () => {
     if (isSpeaking) {
       stop();
     } else {
-      const text = `${question.question}. The answer is: ${question.correctAnswers.join(', or ')}`;
+      // Use dynamic answers if available
+      const dynamicData = getDynamicAnswers(question, settings.selectedState);
+      const effectiveAnswers = dynamicData?.correctAnswers || question.correctAnswers;
+      const text = `${question.question}. The answer is: ${effectiveAnswers.join(', or ')}`;
       speak(text);
     }
   };
@@ -198,29 +203,67 @@ const StudyMode = () => {
                             {isQuestionExpanded && (
                               <div className="px-4 pb-4 animate-fade-in">
                                 <div className="ml-9 space-y-3">
-                                  <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                                        Answer
-                                      </p>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-7 text-xs"
-                                        onClick={(e) => handleSpeakQuestionAndAnswer(question, e)}
-                                      >
-                                        <Volume2 size={14} className="mr-1" />
-                                        Listen
-                                      </Button>
-                                    </div>
-                                    <div className="space-y-1">
-                                      {question.correctAnswers.map((answer, index) => (
-                                        <p key={index} className="text-success font-medium">
-                                          ✓ {answer}
-                                        </p>
-                                      ))}
-                                    </div>
-                                  </div>
+                                  {/* Dynamic answer info */}
+                                  {(() => {
+                                    const dynamicData = getDynamicAnswers(question, settings.selectedState);
+                                    const effectiveCorrectAnswers = dynamicData?.correctAnswers || question.correctAnswers;
+                                    const needsStateSelection = dynamicData?.needsStateSelection || false;
+                                    
+                                    return (
+                                      <>
+                                        {question.dynamicAnswer && (
+                                          <div className="px-2 py-1 bg-warning/10 text-warning text-xs font-medium rounded inline-block">
+                                            Answer varies • Updated Jan 2025
+                                          </div>
+                                        )}
+                                        
+                                        {needsStateSelection && (
+                                          <div className="p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-start gap-2">
+                                            <AlertCircle size={16} className="text-warning shrink-0 mt-0.5" />
+                                            <div>
+                                              <p className="text-sm font-medium text-warning">Select your state</p>
+                                              <p className="text-xs text-muted-foreground mt-1">
+                                                {dynamicData?.hint}
+                                              </p>
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="mt-2 h-7 text-xs"
+                                                onClick={() => navigate('/settings')}
+                                              >
+                                                Go to Settings
+                                              </Button>
+                                            </div>
+                                          </div>
+                                        )}
+                                        
+                                        <div>
+                                          <div className="flex items-center justify-between mb-2">
+                                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                              {needsStateSelection ? 'Correct Answer (select state first)' : 'Answer'}
+                                            </p>
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              className="h-7 text-xs"
+                                              onClick={(e) => handleSpeakQuestionAndAnswer(question, e)}
+                                            >
+                                              <Volume2 size={14} className="mr-1" />
+                                              Listen
+                                            </Button>
+                                          </div>
+                                          <div className="space-y-1">
+                                            {effectiveCorrectAnswers.map((answer, index) => (
+                                              <p key={index} className="text-success font-medium">
+                                                ✓ {answer}
+                                              </p>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </>
+                                    );
+                                  })()}
+                                  
                                   <div>
                                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
                                       Explanation
