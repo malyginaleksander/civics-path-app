@@ -63,32 +63,32 @@ export function getDynamicAnswers(
     // Q30: Speaker of the House
     case 30:
       return {
-        answers: [federalOfficials.speakerOfHouse, "The Vice President", "The President", "The Chief Justice"],
-        correctAnswers: [federalOfficials.speakerOfHouse, "Mike Johnson"],
+        answers: [federalOfficials.speakerOfHouse, federalOfficials.vicePresident, federalOfficials.president, federalOfficials.chiefJustice, "Marco Rubio"],
+        correctAnswers: [federalOfficials.speakerOfHouse],
         needsStateSelection: false,
       };
 
     // Q38: President
     case 38:
       return {
-        answers: [federalOfficials.president, "The Vice President", "The Speaker", "The Chief Justice"],
-        correctAnswers: [federalOfficials.president, "Donald Trump", "Donald J. Trump", "Trump"],
+        answers: [federalOfficials.president, federalOfficials.vicePresident, federalOfficials.speakerOfHouse, federalOfficials.chiefJustice, "Marco Rubio"],
+        correctAnswers: [federalOfficials.president],
         needsStateSelection: false,
       };
 
     // Q39: Vice President
     case 39:
       return {
-        answers: [federalOfficials.vicePresident, "The President", "The Speaker", "The Chief Justice"],
-        correctAnswers: [federalOfficials.vicePresident, "JD Vance", "Vance", "J.D. Vance"],
+        answers: [federalOfficials.vicePresident, federalOfficials.president, federalOfficials.speakerOfHouse, federalOfficials.chiefJustice, "Marco Rubio"],
+        correctAnswers: [federalOfficials.vicePresident],
         needsStateSelection: false,
       };
 
     // Q57: Chief Justice
     case 57:
       return {
-        answers: [federalOfficials.chiefJustice, "The President", "The Vice President", "The Speaker"],
-        correctAnswers: [federalOfficials.chiefJustice, "John Roberts", "Roberts"],
+        answers: [federalOfficials.chiefJustice, federalOfficials.president, federalOfficials.vicePresident, federalOfficials.speakerOfHouse, "Marco Rubio"],
+        correctAnswers: [federalOfficials.chiefJustice],
         needsStateSelection: false,
       };
 
