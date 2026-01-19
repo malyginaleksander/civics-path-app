@@ -32,6 +32,11 @@ interface Settings {
   reminderTime: string | null;
   seniorMode: boolean; // 65/20 rule - only show 20 specially marked questions
   selectedState: string | null; // User's state for dynamic answer questions
+  customOfficials: {
+    governor?: string;
+    senator1?: string;
+    senator2?: string;
+  } | null; // User overrides for state officials
 }
 
 const TRIAL_DAYS = 5;
@@ -79,6 +84,7 @@ const defaultSettings: Settings = {
   reminderTime: null,
   seniorMode: false,
   selectedState: null,
+  customOfficials: null,
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);

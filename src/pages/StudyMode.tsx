@@ -75,7 +75,7 @@ const StudyMode = () => {
       stop();
     } else {
       // Use dynamic answers if available
-      const dynamicData = getDynamicAnswers(question, settings.selectedState);
+      const dynamicData = getDynamicAnswers(question, settings.selectedState, settings.customOfficials);
       const effectiveAnswers = dynamicData?.correctAnswers || question.correctAnswers;
       const text = `${question.question}. The answer is: ${effectiveAnswers.join(', or ')}`;
       speak(text);
@@ -205,7 +205,7 @@ const StudyMode = () => {
                                 <div className="ml-9 space-y-3">
                                   {/* Dynamic answer info */}
                                   {(() => {
-                                    const dynamicData = getDynamicAnswers(question, settings.selectedState);
+                                    const dynamicData = getDynamicAnswers(question, settings.selectedState, settings.customOfficials);
                                     const effectiveCorrectAnswers = dynamicData?.correctAnswers || question.correctAnswers;
                                     const needsStateSelection = dynamicData?.needsStateSelection || false;
                                     

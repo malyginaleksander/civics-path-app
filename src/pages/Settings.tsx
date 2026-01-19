@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -18,6 +18,10 @@ const Settings = () => {
   const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
   const [promoCode, setPromoCode] = useState('');
+  const [isEditingOfficials, setIsEditingOfficials] = useState(false);
+  const [customGovernor, setCustomGovernor] = useState(settings.customOfficials?.governor || '');
+  const [customSenator1, setCustomSenator1] = useState(settings.customOfficials?.senator1 || '');
+  const [customSenator2, setCustomSenator2] = useState(settings.customOfficials?.senator2 || '');
 
   const isNative = Capacitor.isNativePlatform();
 
@@ -286,19 +290,140 @@ const Settings = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {settings.selectedState && (
+                {settings.selectedState && !isEditingOfficials && (
                   <div className="mt-3 p-3 bg-muted/50 rounded-lg text-sm">
                     {(() => {
                       const state = getStateData(settings.selectedState);
                       if (!state) return null;
+                      const hasCustom = settings.customOfficials?.governor || 
+                                        settings.customOfficials?.senator1 || 
+                                        settings.customOfficials?.senator2;
                       return (
                         <>
                           <p><strong>Capital:</strong> {state.capital}</p>
-                          <p><strong>Governor:</strong> {state.governor}</p>
-                          <p><strong>Senators:</strong> {state.senators.join(', ')}</p>
+                          <p>
+                            <strong>Governor:</strong> {settings.customOfficials?.governor || state.governor}
+                            {settings.customOfficials?.governor && <span className="text-primary ml-1">(custom)</span>}
+                          </p>
+                          <p>
+                            <strong>Senators:</strong>{' '}
+                            {settings.customOfficials?.senator1 || state.senators[0]}
+                            {settings.customOfficials?.senator1 && <span className="text-primary ml-1">(custom)</span>}
+                            {', '}
+                            {settings.customOfficials?.senator2 || state.senators[1]}
+                            {settings.customOfficials?.senator2 && <span className="text-primary ml-1">(custom)</span>}
+                          </p>
+                          <div className="flex gap-2 mt-3">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const state = getStateData(settings.selectedState!);
+                                setCustomGovernor(settings.customOfficials?.governor || '');
+                                setCustomSenator1(settings.customOfficials?.senator1 || '');
+                                setCustomSenator2(settings.customOfficials?.senator2 || '');
+                                setIsEditingOfficials(true);
+                              }}
+                            >
+                              <Pencil size={14} className="mr-1" />
+                              Edit Officials
+                            </Button>
+                            {hasCustom && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  updateSettings({ customOfficials: null });
+                                  setCustomGovernor('');
+                                  setCustomSenator1('');
+                                  setCustomSenator2('');
+                                }}
+                              >
+                                <RotateCcw size={14} className="mr-1" />
+                                Reset
+                              </Button>
+                            )}
+                          </div>
                         </>
                       );
                     })()}
+                  </div>
+                )}
+                
+                {/* Edit Officials Form */}
+                {settings.selectedState && isEditingOfficials && (
+                  <div className="mt-3 p-3 bg-primary/5 border border-primary/20 rounded-lg space-y-3">
+                    <p className="text-sm font-medium text-foreground">Customize Officials</p>
+                    <p className="text-xs text-muted-foreground">
+                      Leave blank to use default values. Changes apply to practice tests and study mode.
+                    </p>
+                    <div>
+                      <label className="text-xs text-muted-foreground">Governor</label>
+                      <Input
+                        value={customGovernor}
+                        onChange={(e) => setCustomGovernor(e.target.value)}
+                        placeholder={getStateData(settings.selectedState)?.governor}
+                        className="mt-1"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground">Senator 1</label>
+                      <Input
+                        value={customSenator1}
+                        onChange={(e) => setCustomSenator1(e.target.value)}
+                        placeholder={getStateData(settings.selectedState)?.senators[0]}
+                        className="mt-1"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground">Senator 2</label>
+                      <Input
+                        value={customSenator2}
+                        onChange={(e) => setCustomSenator2(e.target.value)}
+                        placeholder={getStateData(settings.selectedState)?.senators[1]}
+                        className="mt-1"
+                        maxLength={100}
+                      />
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          const trimmedGovernor = customGovernor.trim();
+                          const trimmedSenator1 = customSenator1.trim();
+                          const trimmedSenator2 = customSenator2.trim();
+                          
+                          if (!trimmedGovernor && !trimmedSenator1 && !trimmedSenator2) {
+                            updateSettings({ customOfficials: null });
+                          } else {
+                            updateSettings({
+                              customOfficials: {
+                                governor: trimmedGovernor || undefined,
+                                senator1: trimmedSenator1 || undefined,
+                                senator2: trimmedSenator2 || undefined,
+                              }
+                            });
+                          }
+                          setIsEditingOfficials(false);
+                        }}
+                      >
+                        Save Changes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setCustomGovernor(settings.customOfficials?.governor || '');
+                          setCustomSenator1(settings.customOfficials?.senator1 || '');
+                          setCustomSenator2(settings.customOfficials?.senator2 || '');
+                          setIsEditingOfficials(false);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

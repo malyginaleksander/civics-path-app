@@ -7,12 +7,20 @@ export interface DynamicAnswerResult {
   correctAnswers: string[];
   needsStateSelection: boolean;
   hint?: string;
+  isCustom?: boolean; // True if using user's custom override
 }
 
-// Get dynamic answers for a question based on user's state
+export interface CustomOfficials {
+  governor?: string;
+  senator1?: string;
+  senator2?: string;
+}
+
+// Get dynamic answers for a question based on user's state and custom overrides
 export function getDynamicAnswers(
   question: Question,
-  selectedState: string | null
+  selectedState: string | null,
+  customOfficials?: CustomOfficials | null
 ): DynamicAnswerResult | null {
   if (!question.dynamicAnswer) return null;
 
@@ -30,10 +38,17 @@ export function getDynamicAnswers(
           hint: "Go to Settings → Test Options → Your State",
         };
       }
+      // Use custom senators if provided
+      const customSenators = [];
+      if (customOfficials?.senator1) customSenators.push(customOfficials.senator1);
+      if (customOfficials?.senator2) customSenators.push(customOfficials.senator2);
+      const effectiveSenators = customSenators.length > 0 ? customSenators : stateData.senators;
+      
       return {
-        answers: [...stateData.senators, "The President", "The Governor"],
-        correctAnswers: stateData.senators,
+        answers: [...effectiveSenators, "The President", "The Governor"],
+        correctAnswers: effectiveSenators,
         needsStateSelection: false,
+        isCustom: customSenators.length > 0,
       };
 
     // Q29: Name your U.S. representative
@@ -87,10 +102,13 @@ export function getDynamicAnswers(
           hint: "Go to Settings → Test Options → Your State",
         };
       }
+      // Use custom governor if provided
+      const effectiveGovernor = customOfficials?.governor || stateData.governor;
       return {
-        answers: [stateData.governor, "The President", "The Mayor", "The Senator"],
-        correctAnswers: [stateData.governor],
+        answers: [effectiveGovernor, "The President", "The Mayor", "The Senator"],
+        correctAnswers: [effectiveGovernor],
         needsStateSelection: false,
+        isCustom: !!customOfficials?.governor,
       };
 
     // Q62: State Capital
