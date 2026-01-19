@@ -104,7 +104,7 @@ const PracticeTest = () => {
     setShowResult(true);
 
     // Get effective correct answers (dynamic or static)
-    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState);
+    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState, settings.customOfficials);
     const effectiveCorrectAnswers = dynamicData?.correctAnswers || currentQuestion.correctAnswers;
 
     const isCorrect = effectiveCorrectAnswers.includes(answer);
@@ -129,7 +129,7 @@ const PracticeTest = () => {
     setShowResult(true);
 
     // Get effective correct answers (dynamic or static)
-    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState);
+    const dynamicData = getDynamicAnswers(currentQuestion, settings.selectedState, settings.customOfficials);
     const effectiveCorrectAnswers = dynamicData?.correctAnswers || currentQuestion.correctAnswers;
 
     const { isCorrect } = validateMultipleAnswers(
@@ -257,7 +257,7 @@ const PracticeTest = () => {
                   const reqCount = getRequiredAnswerCount(question.question);
                   
                   // Get effective correct answers (dynamic or static)
-                  const dynamicData = getDynamicAnswers(question, settings.selectedState);
+                  const dynamicData = getDynamicAnswers(question, settings.selectedState, settings.customOfficials);
                   const effectiveCorrectAnswers = dynamicData?.correctAnswers || question.correctAnswers;
                   
                   return (

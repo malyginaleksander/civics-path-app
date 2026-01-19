@@ -46,8 +46,8 @@ export const QuestionCard = ({
 
   // Get dynamic answers if applicable
   const dynamicData = useMemo(() => {
-    return getDynamicAnswers(question, settings.selectedState);
-  }, [question.id, settings.selectedState]);
+    return getDynamicAnswers(question, settings.selectedState, settings.customOfficials);
+  }, [question.id, settings.selectedState, settings.customOfficials]);
 
   // Use dynamic answers if available, otherwise use question's answers
   const effectiveAnswers = dynamicData?.answers || question.answers;
