@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -247,6 +247,29 @@ const Settings = () => {
                 checked={settings.audioAutoplay}
                 onCheckedChange={(checked) => updateSettings({ audioAutoplay: checked })}
                 disabled={!settings.audioEnabled}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Test Options */}
+        <section className="mb-8">
+          <h2 className="text-lg font-bold text-foreground mb-4">Test Options</h2>
+          
+          <div className="bg-card rounded-xl card-shadow overflow-hidden">
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Users size={20} className="text-muted-foreground" />
+                <div>
+                  <p className="font-medium text-foreground">Senior Mode (65/20 Rule)</p>
+                  <p className="text-sm text-muted-foreground">
+                    For applicants 65+ with 20+ years as permanent resident. Only 20 specially marked questions.
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={settings.seniorMode}
+                onCheckedChange={(checked) => updateSettings({ seniorMode: checked })}
               />
             </div>
           </div>

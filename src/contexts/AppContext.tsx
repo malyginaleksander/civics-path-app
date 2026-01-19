@@ -30,6 +30,7 @@ interface Settings {
   audioEnabled: boolean;
   audioAutoplay: boolean;
   reminderTime: string | null;
+  seniorMode: boolean; // 65/20 rule - only show 20 specially marked questions
 }
 
 const TRIAL_DAYS = 5;
@@ -75,6 +76,7 @@ const defaultSettings: Settings = {
   audioEnabled: true,
   audioAutoplay: false,
   reminderTime: null,
+  seniorMode: false,
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);

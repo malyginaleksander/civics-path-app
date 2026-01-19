@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { QuestionCard } from '@/components/QuestionCard';
 import { PageHeader } from '@/components/PageHeader';
-import { questions, getRandomQuestions, getQuestionById, Question } from '@/data/questions';
+import { questions, getRandomQuestions, getQuestionById, Question, getSeniorQuestions, getAllSeniorQuestions } from '@/data/questions';
 import { useApp, TestResult } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { getRequiredAnswerCount, validateMultipleAnswers } from '@/lib/questionUtils';
@@ -20,7 +20,7 @@ interface Answer {
 const PracticeTest = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { addTestResult, markQuestionAsSeen, learningList } = useApp();
+  const { addTestResult, markQuestionAsSeen, learningList, settings } = useApp();
 
   const [testQuestions, setTestQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -57,17 +57,24 @@ const PracticeTest = () => {
     } else if (mode === 'learning') {
       // Practice from learning list - capture current state at test start
       const currentLearningList = learningList;
-      const learningQuestions = currentLearningList
+      let learningQuestions = currentLearningList
         .filter(l => l.status === 'still-learning')
         .map(l => getQuestionById(l.questionId))
         .filter(Boolean) as Question[];
-      setTestQuestions(learningQuestions.length > 0 ? learningQuestions.slice(0, 20) : getRandomQuestions(20));
+      
+      // Filter for senior questions if senior mode is enabled
+      if (settings.seniorMode) {
+        learningQuestions = learningQuestions.filter(q => q.seniorQuestion);
+      }
+      
+      setTestQuestions(learningQuestions.length > 0 ? learningQuestions.slice(0, 20) : 
+        (settings.seniorMode ? getSeniorQuestions(10) : getRandomQuestions(20)));
     } else if (mode === 'weak') {
       // Practice weak areas - will be populated from context
-      setTestQuestions(getRandomQuestions(20));
+      setTestQuestions(settings.seniorMode ? getSeniorQuestions(10) : getRandomQuestions(20));
     } else {
-      // Standard practice test
-      setTestQuestions(getRandomQuestions(20));
+      // Standard practice test - 10 questions for seniors (as per USCIS), 20 for regular
+      setTestQuestions(settings.seniorMode ? getSeniorQuestions(10) : getRandomQuestions(20));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);

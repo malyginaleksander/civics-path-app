@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { HomeCard } from '@/components/HomeCard';
 import { Layout } from '@/components/Layout';
 import { useApp } from '@/contexts/AppContext';
-import { questions, categories } from '@/data/questions';
+import { questions, categories, getAllSeniorQuestions } from '@/data/questions';
 
 const Index = () => {
   const navigate = useNavigate();
-  const { testResults, learningList, seenQuestions } = useApp();
+  const { testResults, learningList, seenQuestions, settings } = useApp();
+  
+  // Get the appropriate questions based on senior mode
+  const activeQuestions = settings.seniorMode ? getAllSeniorQuestions() : questions;
   
   const lastScore = testResults[0]?.score;
   const lastTotal = testResults[0]?.totalQuestions;
@@ -25,8 +28,16 @@ const Index = () => {
             US Citizenship Test Prep
           </h1>
           <p className="text-muted-foreground">
-            Master all 128 official 2025 USCIS civics questions
+            {settings.seniorMode 
+              ? 'Senior Mode: 20 specially marked questions for 65/20 applicants'
+              : `Master all ${questions.length} official 2025 USCIS civics questions`
+            }
           </p>
+          {settings.seniorMode && (
+            <div className="mt-2 inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
+              65/20 Rule Active
+            </div>
+          )}
         </div>
         {/* Disclaimer Banner */}
         <div className="mb-6 p-3 bg-muted/50 rounded-lg border border-border">
@@ -81,8 +92,11 @@ const Index = () => {
           <HomeCard
             to="/study"
             icon={<BookOpen size={24} className="text-primary" />}
-            title="All Questions"
-            description={`Study all ${questions.length} official USCIS questions by topic`}
+            title={settings.seniorMode ? "Senior Questions" : "All Questions"}
+            description={settings.seniorMode 
+              ? `Study all ${activeQuestions.length} specially marked questions`
+              : `Study all ${questions.length} official USCIS questions by topic`
+            }
           />
 
           <HomeCard
@@ -109,10 +123,13 @@ const Index = () => {
           <h2 className="text-lg font-bold text-foreground mb-4">Study by Topic</h2>
           <div className="grid grid-cols-1 gap-3">
             {Object.entries(categories).map(([key, category]) => {
-              const categoryQuestions = questions.filter(q => q.category === key);
+              const categoryQuestions = activeQuestions.filter(q => q.category === key);
               const seenCount = categoryQuestions.filter(q => 
                 seenQuestions.includes(q.id)
               ).length;
+              
+              // Don't show empty categories in senior mode
+              if (settings.seniorMode && categoryQuestions.length === 0) return null;
               
               return (
                 <button
