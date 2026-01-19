@@ -733,7 +733,7 @@ export const questions: Question[] = [
   {
     id: 76,
     question: "What war did the Americans fight to win independence from Britain?",
-    answers: ["American Revolution", "Civil War", "World War I", "War of 1812"],
+    answers: ["American Revolution", "Civil War", "World War I", "War of 1812", "War for (American) Independence"],
     correctAnswers: ["American Revolution", "The (American) Revolutionary War", "War for (American) Independence"],
     explanation: "The American Revolution (Revolutionary War, War for Independence) was fought from 1775-1783.",
     category: 'history',
