@@ -523,7 +523,11 @@ const Settings = () => {
         {/* About */}
         <section>
           <div className="text-center py-8">
-            <span className="text-4xl mb-3 block">🇺🇸</span>
+            <img 
+              src="https://flagcdn.com/w80/us.png" 
+              alt="USA Flag" 
+              className="w-10 h-auto mx-auto mb-3"
+            />
             <p className="font-bold text-foreground">US Citizenship Test Prep</p>
             <p className="text-sm text-muted-foreground">Version 1.0.0</p>
             <p className="text-xs text-muted-foreground mt-2">
