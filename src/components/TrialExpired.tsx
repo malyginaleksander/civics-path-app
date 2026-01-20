@@ -65,7 +65,7 @@ const TrialExpired: React.FC = () => {
           <ul className="text-sm text-muted-foreground space-y-2 text-left">
             <li className="flex items-center gap-2">
               <Star className="w-4 h-4 text-primary" />
-              Full access to all 100 USCIS questions
+              Full access to all 128 USCIS questions
             </li>
             <li className="flex items-center gap-2">
               <Star className="w-4 h-4 text-primary" />
