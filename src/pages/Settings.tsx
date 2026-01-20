@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw, Sparkles } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -84,7 +84,11 @@ const Settings = () => {
           <div className="bg-card rounded-xl card-shadow overflow-hidden">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Crown size={20} className={isPremium ? "text-primary" : "text-muted-foreground"} />
+                {isPremium ? (
+                  <Crown size={20} className="text-primary" />
+                ) : (
+                  <Sparkles size={20} className="text-muted-foreground" />
+                )}
                 <div>
                   <p className="font-medium text-foreground">
                     {isPremium ? 'Premium Active' : 'Free Trial'}
