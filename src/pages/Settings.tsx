@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw, Sparkles } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw, Clock } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -87,7 +87,7 @@ const Settings = () => {
                 {isPremium ? (
                   <Crown size={20} className="text-primary" />
                 ) : (
-                  <Sparkles size={20} className="text-muted-foreground" />
+                  <Clock size={20} className="text-muted-foreground" />
                 )}
                 <div>
                   <p className="font-medium text-foreground">
