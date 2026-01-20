@@ -21,8 +21,12 @@ const Index = () => {
       <div className="px-4 py-6 max-w-3xl mx-auto">
         {/* Hero Section */}
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
-            <span className="text-4xl">🇺🇸</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4 overflow-hidden">
+            <img 
+              src="https://flagcdn.com/w80/us.png" 
+              alt="USA Flag" 
+              className="w-10 h-auto"
+            />
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">
             US Citizenship Test Prep
