@@ -63,7 +63,7 @@ export function getDynamicAnswers(
     // Q30: Speaker of the House
     case 30:
       return {
-        answers: [federalOfficials.speakerOfHouse, "The Vice President", "The President", "The Chief Justice"],
+        answers: [federalOfficials.speakerOfHouse, "JD Vance", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
         correctAnswers: [federalOfficials.speakerOfHouse, "Mike Johnson"],
         needsStateSelection: false,
       };
@@ -71,7 +71,7 @@ export function getDynamicAnswers(
     // Q38: President
     case 38:
       return {
-        answers: [federalOfficials.president, "The Vice President", "The Speaker", "The Chief Justice"],
+        answers: [federalOfficials.president, "JD Vance", "Mike Johnson", "Marco Rubio",  "John G. Roberts, Jr."],
         correctAnswers: [federalOfficials.president, "Donald Trump", "Donald J. Trump", "Trump"],
         needsStateSelection: false,
       };
@@ -79,7 +79,7 @@ export function getDynamicAnswers(
     // Q39: Vice President
     case 39:
       return {
-        answers: [federalOfficials.vicePresident, "The President", "The Speaker", "The Chief Justice"],
+        answers: [federalOfficials.vicePresident, "Mike Johnson", "Donald J. Trump", "Marco Rubio",  "John G. Roberts, Jr."],
         correctAnswers: [federalOfficials.vicePresident, "JD Vance", "Vance", "J.D. Vance"],
         needsStateSelection: false,
       };
@@ -87,8 +87,8 @@ export function getDynamicAnswers(
     // Q57: Chief Justice
     case 57:
       return {
-        answers: [federalOfficials.chiefJustice, "The President", "The Vice President", "The Speaker"],
-        correctAnswers: [federalOfficials.chiefJustice, "John Roberts", "Roberts"],
+        answers: [federalOfficials.chiefJustice, "JD Vance", "Mike Johnson", "Donald J. Trump", "Marco Rubio"],
+        correctAnswers: [federalOfficials.chiefJustice, "John Roberts", "Roberts", "John G. Roberts, Jr."],
         needsStateSelection: false,
       };
 
