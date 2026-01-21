@@ -115,25 +115,40 @@ const Settings = () => {
                   )}
                 </div>
               </div>
-              {!isPremium && isNative && (
-                <Button 
-                  size="sm" 
-                  onClick={handleUpgrade}
-                  disabled={isLoading}
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Upgrade'}
-                </Button>
-              )}
             </div>
-            {!isPremium && isNative && (
-              <div className="px-4 pb-4 pt-0">
-                <button
-                  onClick={handleRestore}
-                  disabled={isLoading}
-                  className="text-sm text-primary hover:underline disabled:opacity-50"
-                >
-                  Restore Purchase
-                </button>
+            
+            {/* Upgrade Section - Show for non-premium users */}
+            {!isPremium && (
+              <div className="px-4 pb-4 pt-2 border-t border-border">
+                <div className="bg-primary/10 rounded-lg p-3 mb-3">
+                  <p className="text-sm font-medium text-foreground mb-1">Unlock Premium - $4.99</p>
+                  <p className="text-xs text-muted-foreground">
+                    One-time purchase • Lifetime access • All features unlocked
+                  </p>
+                </div>
+                {isNative ? (
+                  <div className="flex flex-col gap-2">
+                    <Button 
+                      onClick={handleUpgrade}
+                      disabled={isLoading}
+                      className="w-full"
+                    >
+                      {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Crown className="h-4 w-4 mr-2" />}
+                      Upgrade to Premium
+                    </Button>
+                    <button
+                      onClick={handleRestore}
+                      disabled={isLoading}
+                      className="text-sm text-primary hover:underline disabled:opacity-50"
+                    >
+                      Restore Purchase
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground text-center">
+                    Purchase available in the mobile app
+                  </p>
+                )}
               </div>
             )}
             
