@@ -150,11 +150,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const clearPromoCode = () => {
+    // If the user activated Premium via a promo code, older versions of the app
+    // also set `storePremium=true`. When clearing the promo code we should also
+    // clear `storePremium` *only in that promo scenario* so the input reappears.
+    const hadPromo = !!usedPromoCode;
+
     setUsedPromoCode(null);
     localStorage.removeItem('usedPromoCode');
-    // Also reset store premium so user can enter a new code
-    setStorePremium(false);
-    localStorage.setItem('isPremium', 'false');
+
+    if (hadPromo) {
+      setStorePremium(false);
+      localStorage.setItem('isPremium', 'false');
+    }
   };
 
   const activatePromoCode = (code: string): { success: boolean; message: string } => {
@@ -170,7 +177,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
 
     if (VALID_PROMO_CODES.includes(normalizedCode)) {
-      setPremium(true);
+      // Promo codes unlock Premium without touching the store purchase flag.
+      // This prevents users from getting stuck in Premium when they want to
+      // switch codes, and avoids conflating promo access with real purchases.
       setUsedPromoCode(normalizedCode);
       localStorage.setItem('usedPromoCode', normalizedCode);
       return { success: true, message: 'Premium activated successfully!' };
