@@ -152,6 +152,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const clearPromoCode = () => {
     setUsedPromoCode(null);
     localStorage.removeItem('usedPromoCode');
+    // Also reset store premium so user can enter a new code
+    setStorePremium(false);
+    localStorage.setItem('isPremium', 'false');
   };
 
   const activatePromoCode = (code: string): { success: boolean; message: string } => {
