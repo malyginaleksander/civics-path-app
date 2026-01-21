@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SafeAreaBar } from "@/components/SafeAreaBar";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import TrialExpired from "@/components/TrialExpired";
+import { Onboarding } from "@/components/Onboarding";
 import Index from "./pages/Index";
 import PracticeTest from "./pages/PracticeTest";
 import Results from "./pages/Results";
@@ -22,8 +23,13 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const { isTrialExpired } = useApp();
+  const { isTrialExpired, settings } = useApp();
   const location = useLocation();
+  
+  // Show onboarding if not completed
+  if (!settings.onboardingCompleted) {
+    return <Onboarding />;
+  }
   
   // Allow practice test page even when trial expired (so users can finish/restart tests)
   const isPracticePage = location.pathname === '/practice';

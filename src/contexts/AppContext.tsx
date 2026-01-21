@@ -37,6 +37,7 @@ interface Settings {
     senator1?: string;
     senator2?: string;
   } | null; // User overrides for state officials
+  onboardingCompleted: boolean; // Whether user completed initial setup
 }
 
 const TRIAL_DAYS = 5;
@@ -85,6 +86,7 @@ const defaultSettings: Settings = {
   seniorMode: false,
   selectedState: null,
   customOfficials: null,
+  onboardingCompleted: false,
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
