@@ -72,9 +72,11 @@ export function getDynamicAnswers(
 
     // Q29: Name your U.S. representative
     case 29:
+      // Both answers are considered correct since this varies by district
+      const representativeAnswers = ["This varies by congressional district", "Check your local representative"];
       return {
-        answers: ["This varies by congressional district", "Check your local representative"],
-        correctAnswers: ["Answers will vary by district"],
+        answers: representativeAnswers,
+        correctAnswers: representativeAnswers, // All options are valid
         needsStateSelection: false,
         hint: "Find your representative at house.gov",
       };
