@@ -36,6 +36,7 @@ interface Settings {
     governor?: string;
     senator1?: string;
     senator2?: string;
+    representative?: string;
   } | null; // User overrides for state officials
   onboardingCompleted: boolean; // Whether user completed initial setup
 }

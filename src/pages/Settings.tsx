@@ -22,6 +22,7 @@ const Settings = () => {
   const [customGovernor, setCustomGovernor] = useState(settings.customOfficials?.governor || '');
   const [customSenator1, setCustomSenator1] = useState(settings.customOfficials?.senator1 || '');
   const [customSenator2, setCustomSenator2] = useState(settings.customOfficials?.senator2 || '');
+  const [customRepresentative, setCustomRepresentative] = useState(settings.customOfficials?.representative || '');
 
   const isNative = Capacitor.isNativePlatform();
 
@@ -316,7 +317,8 @@ const Settings = () => {
                       if (!state) return null;
                       const hasCustom = settings.customOfficials?.governor || 
                                         settings.customOfficials?.senator1 || 
-                                        settings.customOfficials?.senator2;
+                                        settings.customOfficials?.senator2 ||
+                                        settings.customOfficials?.representative;
                       return (
                         <>
                           <p><strong>Capital:</strong> {state.capital}</p>
@@ -332,16 +334,22 @@ const Settings = () => {
                             {settings.customOfficials?.senator2 || state.senators[1]}
                             {settings.customOfficials?.senator2 && <span className="text-primary ml-1">(custom)</span>}
                           </p>
+                          <p>
+                            <strong>U.S. Representative:</strong>{' '}
+                            {settings.customOfficials?.representative || <span className="text-muted-foreground italic">Not set (varies by district)</span>}
+                            {settings.customOfficials?.representative && <span className="text-primary ml-1">(custom)</span>}
+                          </p>
                           <div className="flex gap-2 mt-3">
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                const state = getStateData(settings.selectedState!);
-                                setCustomGovernor(settings.customOfficials?.governor || '');
-                                setCustomSenator1(settings.customOfficials?.senator1 || '');
-                                setCustomSenator2(settings.customOfficials?.senator2 || '');
-                                setIsEditingOfficials(true);
+                              const state = getStateData(settings.selectedState!);
+                              setCustomGovernor(settings.customOfficials?.governor || '');
+                              setCustomSenator1(settings.customOfficials?.senator1 || '');
+                              setCustomSenator2(settings.customOfficials?.senator2 || '');
+                              setCustomRepresentative(settings.customOfficials?.representative || '');
+                              setIsEditingOfficials(true);
                               }}
                             >
                               <Pencil size={14} className="mr-1" />
@@ -352,10 +360,11 @@ const Settings = () => {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => {
-                                  updateSettings({ customOfficials: null });
-                                  setCustomGovernor('');
-                                  setCustomSenator1('');
-                                  setCustomSenator2('');
+                              updateSettings({ customOfficials: null });
+                              setCustomGovernor('');
+                              setCustomSenator1('');
+                              setCustomSenator2('');
+                              setCustomRepresentative('');
                                 }}
                               >
                                 <RotateCcw size={14} className="mr-1" />
@@ -406,6 +415,19 @@ const Settings = () => {
                         maxLength={100}
                       />
                     </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground">U.S. Representative</label>
+                      <Input
+                        value={customRepresentative}
+                        onChange={(e) => setCustomRepresentative(e.target.value)}
+                        placeholder="Enter your representative's name"
+                        className="mt-1"
+                        maxLength={100}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Find yours at <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener noreferrer" className="text-primary underline">house.gov</a>
+                      </p>
+                    </div>
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
@@ -413,8 +435,9 @@ const Settings = () => {
                           const trimmedGovernor = customGovernor.trim();
                           const trimmedSenator1 = customSenator1.trim();
                           const trimmedSenator2 = customSenator2.trim();
+                          const trimmedRepresentative = customRepresentative.trim();
                           
-                          if (!trimmedGovernor && !trimmedSenator1 && !trimmedSenator2) {
+                          if (!trimmedGovernor && !trimmedSenator1 && !trimmedSenator2 && !trimmedRepresentative) {
                             updateSettings({ customOfficials: null });
                           } else {
                             updateSettings({
@@ -422,6 +445,7 @@ const Settings = () => {
                                 governor: trimmedGovernor || undefined,
                                 senator1: trimmedSenator1 || undefined,
                                 senator2: trimmedSenator2 || undefined,
+                                representative: trimmedRepresentative || undefined,
                               }
                             });
                           }
@@ -437,6 +461,7 @@ const Settings = () => {
                           setCustomGovernor(settings.customOfficials?.governor || '');
                           setCustomSenator1(settings.customOfficials?.senator1 || '');
                           setCustomSenator2(settings.customOfficials?.senator2 || '');
+                          setCustomRepresentative(settings.customOfficials?.representative || '');
                           setIsEditingOfficials(false);
                         }}
                       >
