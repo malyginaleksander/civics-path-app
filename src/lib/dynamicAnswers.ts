@@ -14,6 +14,7 @@ export interface CustomOfficials {
   governor?: string;
   senator1?: string;
   senator2?: string;
+  representative?: string;
 }
 
 // Pool of political figure names used as distractors
@@ -72,13 +73,22 @@ export function getDynamicAnswers(
 
     // Q29: Name your U.S. representative
     case 29:
-      // Both answers are considered correct since this varies by district
+      // If user entered their representative, use it with distractors
+      if (customOfficials?.representative) {
+        return {
+          answers: buildAnswerOptions(customOfficials.representative),
+          correctAnswers: [customOfficials.representative],
+          needsStateSelection: false,
+          isCustom: true,
+        };
+      }
+      // Otherwise show generic options that are all correct
       const representativeAnswers = ["This varies by congressional district", "Check your local representative"];
       return {
         answers: representativeAnswers,
-        correctAnswers: representativeAnswers, // All options are valid
+        correctAnswers: representativeAnswers,
         needsStateSelection: false,
-        hint: "Find your representative at house.gov",
+        hint: "Enter your representative in Settings for personalized answers",
       };
 
     // Q30: Speaker of the House
