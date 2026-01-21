@@ -1,5 +1,5 @@
 // US State Data for dynamic civics questions
-// Last Updated: January 2025
+// Last Updated: January 2026
 // Source: Official government websites
 // Note: Political officials should be verified at uscis.gov/citizenship/testupdates
 
@@ -52,7 +52,7 @@ export const statesData: StateData[] = [
   { name: "Nebraska", abbreviation: "NE", capital: "Lincoln", governor: "Jim Pillen", senators: ["Deb Fischer", "Pete Ricketts"] },
   { name: "Nevada", abbreviation: "NV", capital: "Carson City", governor: "Joe Lombardo", senators: ["Catherine Cortez Masto", "Jacky Rosen"] },
   { name: "New Hampshire", abbreviation: "NH", capital: "Concord", governor: "Kelly Ayotte", senators: ["Jeanne Shaheen", "Maggie Hassan"] },
-  { name: "New Jersey", abbreviation: "NJ", capital: "Trenton", governor: "Phil Murphy", senators: ["Cory Booker", "Andy Kim"] },
+  { name: "New Jersey", abbreviation: "NJ", capital: "Trenton", governor: "Mikie Sherrill", senators: ["Cory Booker", "Andy Kim"] },
   { name: "New Mexico", abbreviation: "NM", capital: "Santa Fe", governor: "Michelle Lujan Grisham", senators: ["Martin Heinrich", "Ben Ray Luján"] },
   { name: "New York", abbreviation: "NY", capital: "Albany", governor: "Kathy Hochul", senators: ["Chuck Schumer", "Kirsten Gillibrand"] },
   { name: "North Carolina", abbreviation: "NC", capital: "Raleigh", governor: "Josh Stein", senators: ["Thom Tillis", "Ted Budd"] },
