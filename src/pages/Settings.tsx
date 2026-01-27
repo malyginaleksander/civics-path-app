@@ -41,7 +41,12 @@ const Settings = () => {
   const handleUpgrade = async () => {
     if (!currentPackage) {
       console.error('No package available - RevenueCat not configured');
-      alert('Purchase not available. Please contact support.');
+      const platform = Capacitor.getPlatform();
+      if (platform === 'ios') {
+        toast.error('iOS purchases coming soon! Check back after our App Store release.');
+      } else {
+        toast.error('Purchase not available. Please try again later.');
+      }
       return;
     }
     await purchasePackage(currentPackage);
