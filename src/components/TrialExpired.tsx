@@ -61,7 +61,7 @@ const TrialExpired: React.FC = () => {
       console.error('No package available - RevenueCat offerings/packages not found');
       if (platform === 'ios') {
         toast.error('Purchase not available. No products found for this build.');
-        toast.message('Check RevenueCat Offering + App Store Connect IAP status for this app version.');
+        toast.message(error ? `RevenueCat: ${error}` : 'Check RevenueCat Offering + App Store Connect IAP status for this app version.');
       } else {
         toast.error('Purchase not available. Please try again later.');
       }
