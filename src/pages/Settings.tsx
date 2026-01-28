@@ -15,7 +15,7 @@ import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
 const Settings = () => {
   const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, clearPromoCode, usedPromoCode } = useApp();
-  const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading } = useRevenueCat();
+  const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading, error, isInitialized } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
   const [promoCode, setPromoCode] = useState('');
   const [isEditingOfficials, setIsEditingOfficials] = useState(false);
@@ -61,7 +61,7 @@ const Settings = () => {
       console.error('No package available - RevenueCat offerings/packages not found');
       if (platform === 'ios') {
         toast.error('Purchase not available. No products found for this build.');
-        toast.message('Check RevenueCat Offering + App Store Connect IAP status for this app version.');
+        toast.message(error ? `RevenueCat: ${error}` : 'Check RevenueCat Offering + App Store Connect IAP status for this app version.');
       } else {
         toast.error('Purchase not available. Please try again later.');
       }
@@ -168,6 +168,54 @@ const Settings = () => {
                     >
                       Restore Purchase
                     </button>
+
+                    {/* Native-only diagnostics to debug TestFlight/App Store issues */}
+                    <details className="mt-2 rounded-lg border border-border bg-muted/30 p-3">
+                      <summary className="cursor-pointer text-sm font-medium text-foreground">
+                        Purchases diagnostics
+                      </summary>
+                      <div className="mt-3 space-y-2 text-xs text-muted-foreground">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <div className="text-foreground/80">Platform</div>
+                            <div>{Capacitor.getPlatform()}</div>
+                          </div>
+                          <div>
+                            <div className="text-foreground/80">Initialized</div>
+                            <div>{isInitialized ? 'Yes' : 'No'}</div>
+                          </div>
+                          <div>
+                            <div className="text-foreground/80">Has offering</div>
+                            <div>{offerings?.current ? 'Yes' : 'No'}</div>
+                          </div>
+                          <div>
+                            <div className="text-foreground/80">Packages</div>
+                            <div>{offerings?.current?.availablePackages?.length ?? 0}</div>
+                          </div>
+                        </div>
+
+                        {error ? (
+                          <div className="rounded-md border border-border bg-background/60 p-2">
+                            <div className="text-foreground/80">Last error</div>
+                            <div className="break-words">{error}</div>
+                          </div>
+                        ) : null}
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          disabled={isLoading}
+                          onClick={async () => {
+                            const refreshed = await getOfferings();
+                            const count = refreshed?.current?.availablePackages?.length ?? 0;
+                            toast.message(count > 0 ? `Products loaded: ${count}` : (error ? `No products. ${error}` : 'No products found.'));
+                          }}
+                        >
+                          Reload products
+                        </Button>
+                      </div>
+                    </details>
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground text-center">
