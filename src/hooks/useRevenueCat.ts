@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { useApp } from '@/contexts/AppContext';
 
 // Your RevenueCat entitlement identifier (set this in RevenueCat dashboard)
-const ENTITLEMENT_ID = 'premium';
+const ENTITLEMENT_ID = 'pro';
 
 export const useRevenueCat = () => {
   const { setPremium } = useApp();
