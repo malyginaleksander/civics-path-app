@@ -27,7 +27,7 @@ export const useRevenueCat = () => {
 
       // Configure with your API key (public keys are safe to include in client)
       const apiKey = Capacitor.getPlatform() === 'ios' 
-        ? '' // Add iOS key when ready
+        ? 'appl_FksyfKgXYMEtcMkdQArtSnaueVF'
         : 'goog_CYjgsvnBGrhXfffPaOozVBJNxKO';
 
       if (!apiKey) {
