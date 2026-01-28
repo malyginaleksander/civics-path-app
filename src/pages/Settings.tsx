@@ -39,16 +39,35 @@ const Settings = () => {
   }, [offerings]);
 
   const handleUpgrade = async () => {
+    // Defensive: offerings might not be loaded yet (or could have failed to load).
+    // Try a fresh fetch once before showing an error.
     if (!currentPackage) {
-      console.error('No package available - RevenueCat not configured');
       const platform = Capacitor.getPlatform();
+      console.warn('[RevenueCat] No package selected at upgrade click', {
+        platform,
+        isNative: Capacitor.isNativePlatform(),
+        hasCurrentOffering: Boolean(offerings?.current),
+        availablePackagesCount: offerings?.current?.availablePackages?.length ?? 0,
+      });
+
+      const refreshed = await getOfferings();
+      const refreshedPackage = refreshed?.current?.availablePackages?.[0] ?? null;
+      if (refreshedPackage) {
+        setCurrentPackage(refreshedPackage);
+        await purchasePackage(refreshedPackage);
+        return;
+      }
+
+      console.error('No package available - RevenueCat offerings/packages not found');
       if (platform === 'ios') {
-        toast.error('iOS purchases coming soon! Check back after our App Store release.');
+        toast.error('Purchase not available. No products found for this build.');
+        toast.message('Check RevenueCat Offering + App Store Connect IAP status for this app version.');
       } else {
         toast.error('Purchase not available. Please try again later.');
       }
       return;
     }
+
     await purchasePackage(currentPackage);
   };
 
