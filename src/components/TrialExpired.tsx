@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { useApp } from '@/contexts/AppContext';
 import { Capacitor } from '@capacitor/core';
+import { toast } from 'sonner';
 
 const TrialExpired: React.FC = () => {
   const { 
@@ -36,9 +37,19 @@ const TrialExpired: React.FC = () => {
   }, [getOfferings]);
 
   const handlePurchase = async () => {
+    if (!isNative) {
+      toast.message('Purchase is available in the mobile app.');
+      return;
+    }
+
     if (!currentPackage) {
       console.error('No package available - RevenueCat not configured');
-      alert('Purchase not available. Please contact support.');
+      const platform = Capacitor.getPlatform();
+      if (platform === 'ios') {
+        toast.error('iOS purchases coming soon! Check back after our App Store release.');
+      } else {
+        toast.error('Purchase not available. Please try again later.');
+      }
       return;
     }
     await purchasePackage(currentPackage);
@@ -109,7 +120,7 @@ const TrialExpired: React.FC = () => {
 
         <Button 
           onClick={handlePurchase}
-          disabled={isLoading}
+          disabled={isLoading || (!isNative && !currentPackage)}
           className="w-full h-12 text-lg font-semibold"
         >
           {isLoading ? (
@@ -117,6 +128,12 @@ const TrialExpired: React.FC = () => {
           ) : null}
           {isNative ? `Upgrade for ${priceString}` : 'Upgrade to Premium'}
         </Button>
+
+        {!isNative && (
+          <p className="text-xs text-muted-foreground text-center">
+            Purchases aren’t available in the web preview. Please use the iOS/Android app.
+          </p>
+        )}
 
         {isNative && (
           <Button
