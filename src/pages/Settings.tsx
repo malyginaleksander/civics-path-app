@@ -126,7 +126,7 @@ const Settings = () => {
                       : `${trialDaysLeft} day${trialDaysLeft !== 1 ? 's' : ''} remaining`
                     }
                   </p>
-                  {isPremium && usedPromoCode && (
+                  {usedPromoCode && (
                     <button
                       onClick={() => {
                         clearPromoCode();
