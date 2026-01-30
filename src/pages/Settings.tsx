@@ -225,8 +225,8 @@ const Settings = () => {
               </div>
             )}
             
-            {/* Promo Code Section */}
-            {!isPremium && (
+            {/* Promo Code Section - Show when no promo code is applied yet */}
+            {!usedPromoCode && (
               <div className="px-4 pb-4 pt-2 border-t border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <Gift size={16} className="text-muted-foreground" />
@@ -247,11 +247,6 @@ const Settings = () => {
                     Apply
                   </Button>
                 </div>
-                {usedPromoCode && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    A code is already applied. Tap “Use different code” above to change it.
-                  </p>
-                )}
               </div>
             )}
           </div>
