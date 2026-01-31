@@ -130,7 +130,7 @@ const TrialExpired: React.FC = () => {
           </ul>
         </div>
 
-        {error && (
+        {error && !isLoadingPrice && (
           <p className="text-sm text-destructive">{error}</p>
         )}
 
