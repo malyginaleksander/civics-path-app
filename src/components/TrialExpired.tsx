@@ -8,7 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
 // Fallback price if RevenueCat fails to load (should match store pricing)
-const FALLBACK_PRICE = '$4.99';
+const FALLBACK_PRICE = '$6.99';
 
 const TrialExpired: React.FC = () => {
   const { 
