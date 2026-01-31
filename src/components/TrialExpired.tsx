@@ -7,6 +7,9 @@ import { useApp } from '@/contexts/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
+// Fallback price if RevenueCat fails to load (should match store pricing)
+const FALLBACK_PRICE = '$4.99';
+
 const TrialExpired: React.FC = () => {
   const { 
     offerings, 
@@ -89,8 +92,7 @@ const TrialExpired: React.FC = () => {
   };
 
   const isNative = Capacitor.isNativePlatform();
-  const priceString = currentPackage?.product?.priceString;
-  const isLoadingPrice = isNative && !priceString;
+  const priceString = currentPackage?.product?.priceString || FALLBACK_PRICE;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background p-6">
@@ -130,19 +132,19 @@ const TrialExpired: React.FC = () => {
           </ul>
         </div>
 
-        {error && !isLoadingPrice && (
+        {error && (
           <p className="text-sm text-destructive">{error}</p>
         )}
 
         <Button 
           onClick={handlePurchase}
-          disabled={isLoading || isLoadingPrice}
+          disabled={isLoading}
           className="w-full h-12 text-lg font-semibold"
         >
-          {isLoading || isLoadingPrice ? (
+          {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
           ) : null}
-          {isLoadingPrice ? 'Loading...' : (priceString ? `Upgrade for ${priceString}` : 'Upgrade to Premium')}
+          {isNative ? `Upgrade for ${priceString}` : 'Upgrade to Premium'}
         </Button>
 
         {!isNative && (
