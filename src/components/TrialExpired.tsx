@@ -89,7 +89,8 @@ const TrialExpired: React.FC = () => {
   };
 
   const isNative = Capacitor.isNativePlatform();
-  const priceString = currentPackage?.product?.priceString || '$2.99';
+  const priceString = currentPackage?.product?.priceString;
+  const isLoadingPrice = isNative && !priceString;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background p-6">
@@ -135,13 +136,13 @@ const TrialExpired: React.FC = () => {
 
         <Button 
           onClick={handlePurchase}
-          disabled={isLoading || (!isNative && !currentPackage)}
+          disabled={isLoading || isLoadingPrice}
           className="w-full h-12 text-lg font-semibold"
         >
-          {isLoading ? (
+          {isLoading || isLoadingPrice ? (
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
           ) : null}
-          {isNative ? `Upgrade for ${priceString}` : 'Upgrade to Premium'}
+          {isLoadingPrice ? 'Loading...' : (priceString ? `Upgrade for ${priceString}` : 'Upgrade to Premium')}
         </Button>
 
         {!isNative && (
