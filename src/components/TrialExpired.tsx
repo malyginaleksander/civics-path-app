@@ -132,9 +132,6 @@ const TrialExpired: React.FC = () => {
           </ul>
         </div>
 
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
 
         <Button 
           onClick={handlePurchase}
