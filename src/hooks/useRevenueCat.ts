@@ -11,6 +11,7 @@ export const useRevenueCat = () => {
   const [offerings, setOfferings] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastCustomerInfo, setLastCustomerInfo] = useState<any>(null);
 
   // Initialize RevenueCat SDK
   const initialize = useCallback(async () => {
@@ -53,11 +54,13 @@ export const useRevenueCat = () => {
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const { customerInfo } = await Purchases.getCustomerInfo();
+      setLastCustomerInfo(customerInfo);
       
       const activeEntitlements = customerInfo.entitlements?.active || {};
       // Only grant premium if the specific 'premium' entitlement is active
       const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
       console.log('RevenueCat checkSubscriptionStatus:', {
+        originalAppUserId: customerInfo.originalAppUserId,
         activeEntitlements: Object.keys(activeEntitlements),
         hasActiveEntitlement,
         requiredEntitlement: ENTITLEMENT_ID
@@ -113,14 +116,21 @@ export const useRevenueCat = () => {
 
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
+
+      console.log('RevenueCat purchasePackage: starting purchase flow', {
+        productId: packageToPurchase?.product?.identifier,
+      });
+
       const { customerInfo } = await Purchases.purchasePackage({ 
         aPackage: packageToPurchase 
       });
+      setLastCustomerInfo(customerInfo);
 
       const activeEntitlements = customerInfo.entitlements?.active || {};
       // Only grant premium if the specific 'premium' entitlement is active
       const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
       console.log('RevenueCat purchasePackage result:', {
+        originalAppUserId: customerInfo.originalAppUserId,
         activeEntitlements: Object.keys(activeEntitlements),
         hasActiveEntitlement,
         requiredEntitlement: ENTITLEMENT_ID
@@ -153,11 +163,13 @@ export const useRevenueCat = () => {
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
       const { customerInfo } = await Purchases.restorePurchases();
+      setLastCustomerInfo(customerInfo);
 
       const activeEntitlements = customerInfo.entitlements?.active || {};
       // Only grant premium if the specific 'premium' entitlement is active
       const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
       console.log('RevenueCat restorePurchases result:', {
+        originalAppUserId: customerInfo.originalAppUserId,
         activeEntitlements: Object.keys(activeEntitlements),
         hasActiveEntitlement,
         requiredEntitlement: ENTITLEMENT_ID
@@ -179,6 +191,35 @@ export const useRevenueCat = () => {
     initialize();
   }, [initialize]);
 
+  // Debug / investigation helpers (safe to ship; only used when explicitly exposed in UI)
+  const getCustomerInfoDebug = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return null;
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      const { customerInfo } = await Purchases.getCustomerInfo();
+      setLastCustomerInfo(customerInfo);
+      return customerInfo;
+    } catch (e) {
+      console.error('RevenueCat getCustomerInfoDebug error:', e);
+      return null;
+    }
+  }, []);
+
+  const resetRevenueCatUser = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return false;
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      console.warn('RevenueCat resetRevenueCatUser: calling Purchases.logOut()');
+      await Purchases.logOut();
+      setPremium(false);
+      await checkSubscriptionStatus();
+      return true;
+    } catch (e) {
+      console.error('RevenueCat resetRevenueCatUser error:', e);
+      return false;
+    }
+  }, [checkSubscriptionStatus, setPremium]);
+
   return {
     isInitialized,
     isLoading,
@@ -188,5 +229,9 @@ export const useRevenueCat = () => {
     purchasePackage,
     restorePurchases,
     checkSubscriptionStatus,
+    // debug
+    lastCustomerInfo,
+    getCustomerInfoDebug,
+    resetRevenueCatUser,
   };
 };

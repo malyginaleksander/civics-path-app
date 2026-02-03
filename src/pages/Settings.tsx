@@ -9,13 +9,24 @@ import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
 const Settings = () => {
   const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium } = useApp();
-  const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading, error, isInitialized } = useRevenueCat();
+  const {
+    offerings,
+    getOfferings,
+    purchasePackage,
+    restorePurchases,
+    isLoading,
+    error,
+    isInitialized,
+    lastCustomerInfo,
+    getCustomerInfoDebug,
+    resetRevenueCatUser,
+  } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
   const [isEditingOfficials, setIsEditingOfficials] = useState(false);
   const [customGovernor, setCustomGovernor] = useState(settings.customOfficials?.governor || '');
@@ -24,6 +35,16 @@ const Settings = () => {
   const [customRepresentative, setCustomRepresentative] = useState(settings.customOfficials?.representative || '');
 
   const isNative = Capacitor.isNativePlatform();
+
+  // Debug mode: set in native app console or dev tools
+  // localStorage.setItem('rc_debug', '1')
+  const isRevenueCatDebugEnabled = useMemo(() => {
+    try {
+      return localStorage.getItem('rc_debug') === '1';
+    } catch {
+      return false;
+    }
+  }, []);
 
   useEffect(() => {
     if (isNative && !isPremium) {
@@ -149,6 +170,62 @@ const Settings = () => {
                     Purchase available in the mobile app
                   </p>
                 )}
+              </div>
+            )}
+
+            {isNative && isRevenueCatDebugEnabled && (
+              <div className="px-4 pb-4 pt-3 border-t border-border">
+                <div className="rounded-lg border border-border bg-muted/30 p-3">
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <p className="text-sm font-semibold text-foreground">RevenueCat Debug</p>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        disabled={isLoading}
+                        onClick={async () => {
+                          await getCustomerInfoDebug();
+                          toast.message('Fetched latest RevenueCat customer info (check logs).');
+                        }}
+                      >
+                        Refresh
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        disabled={isLoading}
+                        onClick={async () => {
+                          const ok = await resetRevenueCatUser();
+                          toast.message(ok ? 'RevenueCat user logged out. Re-checking entitlements…' : 'Failed to log out RevenueCat user.');
+                        }}
+                      >
+                        Reset user
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p>
+                      <span className="font-medium text-foreground">Initialized:</span> {String(isInitialized)}
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">Original App User ID:</span>{' '}
+                      {lastCustomerInfo?.originalAppUserId ?? '—'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">Active entitlements:</span>{' '}
+                      {Object.keys(lastCustomerInfo?.entitlements?.active || {}).join(', ') || '—'}
+                    </p>
+                    <p className="pt-1">
+                      If <strong>premium</strong> is already active here, iOS may not show a purchase sheet (it’s already owned).
+                    </p>
+                    <p>
+                      If <strong>premium</strong> is <em>not</em> active but the UI flips to Premium, that’s a code bug—tell me what these lines show.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
