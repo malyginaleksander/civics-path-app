@@ -209,7 +209,8 @@ const Settings = () => {
                         disabled={isLoading}
                         onClick={async () => {
                           await getCustomerInfoDebug();
-                          toast.message('Fetched latest RevenueCat customer info (check logs).');
+                          await getOfferings();
+                          toast.message('Refreshed RevenueCat data.');
                         }}
                       >
                         Refresh
@@ -222,11 +223,12 @@ const Settings = () => {
                         onClick={async () => {
                           const result = await resetRevenueCatUser();
                           if (result === true) {
-                            toast.success('RevenueCat user logged out. Re-checking entitlements…');
+                            toast.success('RevenueCat user reset. Re-checking…');
+                            await getOfferings();
                           } else if (typeof result === 'object' && result.error) {
                             toast.error(`Failed: ${result.error}`);
                           } else {
-                            toast.error('Failed to log out RevenueCat user.');
+                            toast.error('Failed to reset RevenueCat user.');
                           }
                         }}
                       >
@@ -240,18 +242,27 @@ const Settings = () => {
                       <span className="font-medium text-foreground">Initialized:</span> {String(isInitialized)}
                     </p>
                     <p>
-                      <span className="font-medium text-foreground">Original App User ID:</span>{' '}
+                      <span className="font-medium text-foreground">User ID:</span>{' '}
                       {lastCustomerInfo?.originalAppUserId ?? '—'}
                     </p>
                     <p>
                       <span className="font-medium text-foreground">Active entitlements:</span>{' '}
-                      {Object.keys(lastCustomerInfo?.entitlements?.active || {}).join(', ') || '—'}
-                    </p>
-                    <p className="pt-1">
-                      If <strong>premium</strong> is already active here, iOS may not show a purchase sheet (it’s already owned).
+                      {Object.keys(lastCustomerInfo?.entitlements?.active || {}).join(', ') || '(none)'}
                     </p>
                     <p>
-                      If <strong>premium</strong> is <em>not</em> active but the UI flips to Premium, that’s a code bug—tell me what these lines show.
+                      <span className="font-medium text-foreground">Offering:</span>{' '}
+                      {offerings?.current?.identifier ?? '(none)'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">Packages:</span>{' '}
+                      {offerings?.current?.availablePackages?.length ?? 0} available
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">RC Error:</span>{' '}
+                      {error ?? '(none)'}
+                    </p>
+                    <p className="pt-1 text-yellow-600 dark:text-yellow-400">
+                      If Packages = 0, product is missing from App Store Connect or RevenueCat Offering.
                     </p>
                   </div>
                 </div>
