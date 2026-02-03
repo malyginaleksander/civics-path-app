@@ -42,7 +42,6 @@ interface Settings {
 }
 
 const TRIAL_DAYS = 5;
-const VALID_PROMO_CODES = ['FREEUSCIS', 'CITIZEN2025', 'PREMIUM100'];
 
 interface AppContextType {
   // Test Results
@@ -70,9 +69,6 @@ interface AppContextType {
   isTrialExpired: boolean;
   isPremium: boolean;
   setPremium: (value: boolean) => void;
-  activatePromoCode: (code: string) => { success: boolean; message: string };
-  clearPromoCode: () => void;
-  usedPromoCode: string | null;
   
   // Clear all data
   clearAllData: () => void;
@@ -121,18 +117,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return now;
   });
 
-  const [usedPromoCode, setUsedPromoCode] = useState<string | null>(() => {
-    return localStorage.getItem('usedPromoCode');
-  });
-
-  // "Store premium" is the purchase-based premium flag (RevenueCat / restore)
-  const [storePremium, setStorePremium] = useState<boolean>(() => {
+  const [isPremium, setIsPremiumState] = useState<boolean>(() => {
     const saved = localStorage.getItem('isPremium');
     return saved === 'true';
   });
-
-  // Effective premium includes promo-code activation (so purchases can't override it)
-  const isPremium = storePremium || !!usedPromoCode;
 
   const trialDaysLeft = React.useMemo(() => {
     if (isPremium) return TRIAL_DAYS;
@@ -146,47 +134,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const isTrialExpired = !isPremium && trialDaysLeft === 0;
 
   const setPremium = (value: boolean) => {
-    setStorePremium(value);
+    setIsPremiumState(value);
     localStorage.setItem('isPremium', String(value));
-  };
-
-  const clearPromoCode = () => {
-    // If the user activated Premium via a promo code, older versions of the app
-    // also set `storePremium=true`. When clearing the promo code we should also
-    // clear `storePremium` *only in that promo scenario* so the input reappears.
-    const hadPromo = !!usedPromoCode;
-
-    setUsedPromoCode(null);
-    localStorage.removeItem('usedPromoCode');
-
-    if (hadPromo) {
-      setStorePremium(false);
-      localStorage.setItem('isPremium', 'false');
-    }
-  };
-
-  const activatePromoCode = (code: string): { success: boolean; message: string } => {
-    const normalizedCode = code.trim().toUpperCase();
-
-    // If a promo code is already applied, require clearing it first
-    if (usedPromoCode) {
-      return { success: false, message: 'Promo code already applied. Tap "Use different code" to change it.' };
-    }
-
-    if (!normalizedCode) {
-      return { success: false, message: 'Please enter a promo code.' };
-    }
-
-    if (VALID_PROMO_CODES.includes(normalizedCode)) {
-      // Promo codes unlock Premium without touching the store purchase flag.
-      // This prevents users from getting stuck in Premium when they want to
-      // switch codes, and avoids conflating promo access with real purchases.
-      setUsedPromoCode(normalizedCode);
-      localStorage.setItem('usedPromoCode', normalizedCode);
-      return { success: true, message: 'Premium activated successfully!' };
-    }
-
-    return { success: false, message: 'Invalid promo code. Please try again.' };
   };
 
   // Persist to localStorage
@@ -333,9 +282,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setLearningList([]);
     setSeenQuestions([]);
     setSettings(defaultSettings);
-    setStorePremium(false);
-    setUsedPromoCode(null);
-    localStorage.removeItem('usedPromoCode');
+    setIsPremiumState(false);
     // Reset trial start date to now (restarts the 5-day trial)
     const now = new Date().toISOString();
     setTrialStartDate(now);
@@ -361,9 +308,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       isTrialExpired,
       isPremium,
       setPremium,
-      activatePromoCode,
-      clearPromoCode,
-      usedPromoCode,
       clearAllData,
     }}>
       {children}

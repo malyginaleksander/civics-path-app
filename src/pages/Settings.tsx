@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Gift, Users, MapPin, Pencil, RotateCcw, Clock } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -14,10 +14,9 @@ import { toast } from 'sonner';
 import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, activatePromoCode, clearPromoCode, usedPromoCode } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium } = useApp();
   const { offerings, getOfferings, purchasePackage, restorePurchases, isLoading, error, isInitialized } = useRevenueCat();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
-  const [promoCode, setPromoCode] = useState('');
   const [isEditingOfficials, setIsEditingOfficials] = useState(false);
   const [customGovernor, setCustomGovernor] = useState(settings.customOfficials?.governor || '');
   const [customSenator1, setCustomSenator1] = useState(settings.customOfficials?.senator1 || '');
@@ -75,16 +74,6 @@ const Settings = () => {
     await restorePurchases();
   };
 
-  const handlePromoCode = () => {
-    const result = activatePromoCode(promoCode);
-    if (result.success) {
-      toast.success(result.message);
-      setPromoCode('');
-    } else {
-      toast.error(result.message);
-    }
-  };
-
   const fontSizes = [
     { value: 'normal', label: 'Normal' },
     { value: 'medium', label: 'Medium' },
@@ -120,24 +109,10 @@ const Settings = () => {
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {isPremium 
-                      ? (usedPromoCode 
-                          ? `Activated with code "${usedPromoCode}"`
-                          : 'You have full access to all features')
+                      ? 'You have full access to all features'
                       : `${trialDaysLeft} day${trialDaysLeft !== 1 ? 's' : ''} remaining`
                     }
                   </p>
-                  {usedPromoCode && (
-                    <button
-                      onClick={() => {
-                        clearPromoCode();
-                        toast.message('Promo code cleared. You can enter a new one.');
-                      }}
-                      className="mt-1 text-xs text-primary hover:underline"
-                      type="button"
-                    >
-                      Use different code
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -146,7 +121,7 @@ const Settings = () => {
             {!isPremium && (
               <div className="px-4 pb-4 pt-2 border-t border-border">
                 <div className="bg-primary/10 rounded-lg p-3 mb-3">
-                  <p className="text-sm font-medium text-foreground mb-1">Unlock Premium - $4.99</p>
+                  <p className="text-sm font-medium text-foreground mb-1">Unlock Premium - $6.99</p>
                   <p className="text-xs text-muted-foreground">
                     One-time purchase • Lifetime access • All features unlocked
                   </p>
@@ -174,31 +149,6 @@ const Settings = () => {
                     Purchase available in the mobile app
                   </p>
                 )}
-              </div>
-            )}
-            
-            {/* Promo Code Section - Show when no promo code is applied yet */}
-            {!usedPromoCode && (
-              <div className="px-4 pb-4 pt-2 border-t border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <Gift size={16} className="text-muted-foreground" />
-                  <p className="text-sm font-medium text-foreground">Have a promo code?</p>
-                </div>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Enter code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button 
-                    size="sm" 
-                    onClick={handlePromoCode}
-                    disabled={!promoCode.trim()}
-                  >
-                    Apply
-                  </Button>
-                </div>
               </div>
             )}
           </div>

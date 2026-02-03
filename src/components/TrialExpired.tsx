@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Lock, Star, RotateCcw, Loader2, Ticket } from 'lucide-react';
+import { Lock, Star, RotateCcw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
-import { useApp } from '@/contexts/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
@@ -19,12 +17,7 @@ const TrialExpired: React.FC = () => {
     isLoading, 
     error 
   } = useRevenueCat();
-  const { activatePromoCode } = useApp();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
-  const [showPromoInput, setShowPromoInput] = useState(false);
-  const [promoCode, setPromoCode] = useState('');
-  const [promoError, setPromoError] = useState<string | null>(null);
-  const [promoLoading, setPromoLoading] = useState(false);
 
   useEffect(() => {
     const loadOfferings = async () => {
@@ -75,20 +68,6 @@ const TrialExpired: React.FC = () => {
 
   const handleRestore = async () => {
     await restorePurchases();
-  };
-
-  const handlePromoSubmit = () => {
-    setPromoLoading(true);
-    setPromoError(null);
-    
-    const result = activatePromoCode(promoCode);
-    
-    if (!result.success) {
-      setPromoError(result.message);
-    }
-    // If successful, the app context will update isPremium and this component will unmount
-    
-    setPromoLoading(false);
   };
 
   const isNative = Capacitor.isNativePlatform();
@@ -160,55 +139,6 @@ const TrialExpired: React.FC = () => {
             <RotateCcw className="w-4 h-4 mr-2" />
             Restore Purchase
           </Button>
-        )}
-
-        {/* Promo Code Section */}
-        {!showPromoInput ? (
-          <button
-            onClick={() => setShowPromoInput(true)}
-            className="text-sm text-primary hover:underline flex items-center justify-center gap-1 mx-auto"
-          >
-            <Ticket className="w-4 h-4" />
-            Have a promo code?
-          </button>
-        ) : (
-          <div className="space-y-3 pt-2 border-t border-border">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter promo code"
-                value={promoCode}
-                onChange={(e) => {
-                  setPromoCode(e.target.value);
-                  setPromoError(null);
-                }}
-                className="flex-1"
-              />
-              <Button
-                onClick={handlePromoSubmit}
-                disabled={promoLoading || !promoCode.trim()}
-                size="default"
-              >
-                {promoLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  'Apply'
-                )}
-              </Button>
-            </div>
-            {promoError && (
-              <p className="text-sm text-destructive">{promoError}</p>
-            )}
-            <button
-              onClick={() => {
-                setShowPromoInput(false);
-                setPromoCode('');
-                setPromoError(null);
-              }}
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              Cancel
-            </button>
-          </div>
         )}
         
         <p className="text-xs text-muted-foreground">
