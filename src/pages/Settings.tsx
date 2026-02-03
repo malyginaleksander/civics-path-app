@@ -9,7 +9,7 @@ import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
@@ -36,15 +36,38 @@ const Settings = () => {
 
   const isNative = Capacitor.isNativePlatform();
 
-  // Debug mode: set in native app console or dev tools
-  // localStorage.setItem('rc_debug', '1')
-  const isRevenueCatDebugEnabled = useMemo(() => {
+  // Debug mode: tap version 5 times to toggle
+  const [debugTapCount, setDebugTapCount] = useState(0);
+  const [isRevenueCatDebugEnabled, setIsRevenueCatDebugEnabled] = useState(() => {
     try {
       return localStorage.getItem('rc_debug') === '1';
     } catch {
       return false;
     }
-  }, []);
+  });
+
+  const handleVersionTap = () => {
+    const newCount = debugTapCount + 1;
+    setDebugTapCount(newCount);
+    
+    if (newCount >= 5) {
+      const newState = !isRevenueCatDebugEnabled;
+      setIsRevenueCatDebugEnabled(newState);
+      try {
+        if (newState) {
+          localStorage.setItem('rc_debug', '1');
+          toast.success('Debug mode enabled');
+        } else {
+          localStorage.removeItem('rc_debug');
+          toast.success('Debug mode disabled');
+        }
+      } catch {}
+      setDebugTapCount(0);
+    }
+    
+    // Reset tap count after 2 seconds of no tapping
+    setTimeout(() => setDebugTapCount(0), 2000);
+  };
 
   useEffect(() => {
     if (isNative && !isPremium) {
@@ -618,7 +641,15 @@ const Settings = () => {
               alt="USA Flag" 
               className="w-10 h-auto mx-auto mb-3"
             />
-            <p className="font-bold text-foreground">US Citizenship Test Prep</p>
+            <p 
+              className="font-bold text-foreground cursor-pointer select-none"
+              onClick={handleVersionTap}
+            >
+              US Citizenship Test Prep
+              {debugTapCount > 0 && debugTapCount < 5 && (
+                <span className="ml-2 text-xs text-muted-foreground">({5 - debugTapCount} more)</span>
+              )}
+            </p>
             <p className="text-sm text-muted-foreground">Version 1.0.0</p>
             <p className="text-xs text-muted-foreground mt-2">
               128 official 2025 USCIS civics questions
