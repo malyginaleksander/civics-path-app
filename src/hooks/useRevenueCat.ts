@@ -55,9 +55,13 @@ export const useRevenueCat = () => {
       const { customerInfo } = await Purchases.getCustomerInfo();
       
       const activeEntitlements = customerInfo.entitlements?.active || {};
-      const hasActiveEntitlement =
-        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
-        Object.keys(activeEntitlements).length > 0;
+      // Only grant premium if the specific 'premium' entitlement is active
+      const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
+      console.log('RevenueCat checkSubscriptionStatus:', {
+        activeEntitlements: Object.keys(activeEntitlements),
+        hasActiveEntitlement,
+        requiredEntitlement: ENTITLEMENT_ID
+      });
       setPremium(hasActiveEntitlement);
 
       return hasActiveEntitlement;
@@ -114,9 +118,13 @@ export const useRevenueCat = () => {
       });
 
       const activeEntitlements = customerInfo.entitlements?.active || {};
-      const hasActiveEntitlement =
-        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
-        Object.keys(activeEntitlements).length > 0;
+      // Only grant premium if the specific 'premium' entitlement is active
+      const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
+      console.log('RevenueCat purchasePackage result:', {
+        activeEntitlements: Object.keys(activeEntitlements),
+        hasActiveEntitlement,
+        requiredEntitlement: ENTITLEMENT_ID
+      });
       setPremium(hasActiveEntitlement);
 
       return hasActiveEntitlement;
@@ -147,9 +155,13 @@ export const useRevenueCat = () => {
       const { customerInfo } = await Purchases.restorePurchases();
 
       const activeEntitlements = customerInfo.entitlements?.active || {};
-      const hasActiveEntitlement =
-        (ENTITLEMENT_ID && ENTITLEMENT_ID in activeEntitlements) ||
-        Object.keys(activeEntitlements).length > 0;
+      // Only grant premium if the specific 'premium' entitlement is active
+      const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
+      console.log('RevenueCat restorePurchases result:', {
+        activeEntitlements: Object.keys(activeEntitlements),
+        hasActiveEntitlement,
+        requiredEntitlement: ENTITLEMENT_ID
+      });
       setPremium(hasActiveEntitlement);
 
       return hasActiveEntitlement;
