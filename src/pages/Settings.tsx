@@ -220,8 +220,14 @@ const Settings = () => {
                         variant="destructive"
                         disabled={isLoading}
                         onClick={async () => {
-                          const ok = await resetRevenueCatUser();
-                          toast.message(ok ? 'RevenueCat user logged out. Re-checking entitlements…' : 'Failed to log out RevenueCat user.');
+                          const result = await resetRevenueCatUser();
+                          if (result === true) {
+                            toast.success('RevenueCat user logged out. Re-checking entitlements…');
+                          } else if (typeof result === 'object' && result.error) {
+                            toast.error(`Failed: ${result.error}`);
+                          } else {
+                            toast.error('Failed to log out RevenueCat user.');
+                          }
                         }}
                       >
                         Reset user

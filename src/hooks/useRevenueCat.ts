@@ -209,14 +209,68 @@ export const useRevenueCat = () => {
     if (!Capacitor.isNativePlatform()) return false;
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      
+      // First, get current user info for debugging
+      const { customerInfo: currentInfo } = await Purchases.getCustomerInfo();
+      console.warn('RevenueCat resetRevenueCatUser: current user before reset:', {
+        originalAppUserId: currentInfo.originalAppUserId,
+        activeEntitlements: Object.keys(currentInfo.entitlements?.active || {}),
+      });
+      
+      // Check if user is anonymous - logOut() fails on anonymous users
+      const { isAnonymous } = await Purchases.isAnonymous();
+      console.warn('RevenueCat resetRevenueCatUser: isAnonymous =', isAnonymous);
+      
+      if (isAnonymous) {
+        // For anonymous users, we can't logOut - instead we need to 
+        // reconfigure the SDK to get a fresh anonymous ID.
+        // This is a workaround: we'll just reset local premium state
+        // and re-fetch entitlements.
+        console.warn('RevenueCat resetRevenueCatUser: user is anonymous, cannot logOut. Re-configuring...');
+        
+        // Re-configure RevenueCat to get a fresh anonymous ID
+        const apiKey = Capacitor.getPlatform() === 'ios' 
+          ? 'appl_FksyfKgXYMEtcMkdQArtSnaueVF'
+          : 'goog_CYjgsvnBGrhXfffPaOozVBJNxKO';
+        
+        await Purchases.configure({ apiKey });
+        
+        const { customerInfo: newInfo } = await Purchases.getCustomerInfo();
+        console.warn('RevenueCat resetRevenueCatUser: after reconfigure:', {
+          originalAppUserId: newInfo.originalAppUserId,
+          activeEntitlements: Object.keys(newInfo.entitlements?.active || {}),
+        });
+        
+        setLastCustomerInfo(newInfo);
+        const hasActive = ENTITLEMENT_ID in (newInfo.entitlements?.active || {});
+        setPremium(hasActive);
+        return true;
+      }
+      
+      // For identified users, logOut works
       console.warn('RevenueCat resetRevenueCatUser: calling Purchases.logOut()');
-      await Purchases.logOut();
+      const { customerInfo: newInfo } = await Purchases.logOut();
+      
+      console.warn('RevenueCat resetRevenueCatUser: new user after logout:', {
+        originalAppUserId: newInfo.originalAppUserId,
+        activeEntitlements: Object.keys(newInfo.entitlements?.active || {}),
+      });
+      
+      setLastCustomerInfo(newInfo);
       setPremium(false);
+      
+      // Re-check subscription status with the new user
       await checkSubscriptionStatus();
       return true;
-    } catch (e) {
-      console.error('RevenueCat resetRevenueCatUser error:', e);
-      return false;
+    } catch (e: any) {
+      // Log detailed error info
+      console.error('RevenueCat resetRevenueCatUser error:', {
+        message: e?.message,
+        code: e?.code,
+        underlyingErrorMessage: e?.underlyingErrorMessage,
+        fullError: JSON.stringify(e),
+      });
+      return { error: e?.message || 'Unknown error' };
     }
   }, [checkSubscriptionStatus, setPremium]);
 
