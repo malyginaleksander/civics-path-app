@@ -117,10 +117,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return now;
   });
 
-  const [isPremium, setIsPremiumState] = useState<boolean>(() => {
-    const saved = localStorage.getItem('isPremium');
-    return saved === 'true';
-  });
+  // Premium access must be granted strictly by store entitlements (RevenueCat),
+  // not by local persisted flags (which can leak across different sandbox accounts).
+  const [isPremium, setIsPremiumState] = useState<boolean>(false);
 
   const trialDaysLeft = React.useMemo(() => {
     if (isPremium) return TRIAL_DAYS;
@@ -135,7 +134,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const setPremium = (value: boolean) => {
     setIsPremiumState(value);
-    localStorage.setItem('isPremium', String(value));
   };
 
   // Persist to localStorage
