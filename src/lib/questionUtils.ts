@@ -27,22 +27,28 @@ export function getRequiredAnswerCount(questionText: string): number {
   return 1; // Default: single answer required
 }
 
-// Check if all selected answers are correct and meet the minimum count
+// Check if all selected answers are correct
+// For questions with required count (e.g., "name two"): must select exactly that many, all correct
+// For questions without required count: any selection allowed, but ALL must be correct
 export function validateMultipleAnswers(
   selectedAnswers: string[],
   correctAnswers: string[],
   requiredCount: number
 ): { isCorrect: boolean; isComplete: boolean } {
-  // Check if we have enough selections
-  const isComplete = selectedAnswers.length >= requiredCount;
+  // For "name X" questions, must meet minimum count
+  // For regular questions, just need at least 1 selection
+  const isComplete = requiredCount > 1 
+    ? selectedAnswers.length >= requiredCount
+    : selectedAnswers.length >= 1;
   
   // Check if ALL selected answers are in the correct answers list
-  const allCorrect = selectedAnswers.every(answer => 
+  // If ANY selected answer is wrong, the result is wrong
+  const allCorrect = selectedAnswers.length > 0 && selectedAnswers.every(answer => 
     correctAnswers.includes(answer)
   );
   
   return {
-    isCorrect: isComplete && allCorrect,
+    isCorrect: allCorrect,
     isComplete,
   };
 }

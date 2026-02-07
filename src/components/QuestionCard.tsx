@@ -125,7 +125,10 @@ export const QuestionCard = ({
           )}
           {isMultiSelect && !showResult && (
             <p className="text-sm text-primary mt-2">
-              Select {requiredCount} answer{requiredCount > 1 ? 's' : ''} ({selectedAnswers.length}/{requiredCount} selected)
+              {requiredCount > 1 
+                ? `Select ${requiredCount} answers (${selectedAnswers.length}/${requiredCount} selected)`
+                : `Select answer(s) and tap Submit (${selectedAnswers.length} selected)`
+              }
             </p>
           )}
         </div>
@@ -220,13 +223,14 @@ export const QuestionCard = ({
       </div>
 
       {/* Submit button for multi-select */}
-      {isMultiSelect && !showResult && selectedAnswers.length >= requiredCount && onSubmitMultipleAnswers && (
+      {isMultiSelect && !showResult && selectedAnswers.length >= 1 && onSubmitMultipleAnswers && (
         <Button
           onClick={onSubmitMultipleAnswers}
           className="w-full mb-4"
           size="lg"
+          disabled={requiredCount > 1 && selectedAnswers.length < requiredCount}
         >
-          Submit Answers
+          Submit Answer{selectedAnswers.length > 1 ? 's' : ''}
         </Button>
       )}
 
