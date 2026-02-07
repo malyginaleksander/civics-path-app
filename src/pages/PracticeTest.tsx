@@ -348,7 +348,7 @@ const PracticeTest = () => {
 
         {/* Next Button */}
         {showResult && (
-          <div className="mt-6 pb-[env(safe-area-inset-bottom,24px)]">
+          <div className="mt-6 safe-area-bottom">
             <Button
               onClick={handleNext}
               className="w-full"
