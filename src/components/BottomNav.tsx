@@ -1,6 +1,7 @@
 import { Home, FileText, BookOpen, Bookmark, Settings } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Capacitor } from '@capacitor/core';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Home' },
@@ -11,8 +12,13 @@ const navItems = [
 ];
 
 export const BottomNav = () => {
+  const isIOS = Capacitor.getPlatform() === 'ios';
+  
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border safe-area-bottom">
+    <nav className={cn(
+      "fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border",
+      isIOS ? "safe-area-bottom" : "pb-[env(safe-area-inset-bottom,0px)]"
+    )}>
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
