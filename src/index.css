@@ -140,7 +140,8 @@
   }
 
   .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 1rem);
+    /* Safe area + 12px extra padding for comfortable touch spacing on iOS */
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
 
   .safe-area-top {
