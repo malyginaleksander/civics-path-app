@@ -186,6 +186,36 @@ export const useRevenueCat = () => {
     }
   }, [setPremium]);
 
+  // Present Apple Offer Code redemption sheet (iOS only)
+  const presentOfferCodeRedeemSheet = useCallback(async () => {
+    if (!Capacitor.isNativePlatform() || Capacitor.getPlatform() !== 'ios') {
+      setError('Offer code redemption is only available on iOS');
+      return false;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      await Purchases.presentCodeRedemptionSheet();
+      
+      // After the sheet is dismissed, refresh subscription status
+      // Note: There's a delay before the entitlement is updated
+      setTimeout(async () => {
+        await checkSubscriptionStatus();
+        setIsLoading(false);
+      }, 2000);
+      
+      return true;
+    } catch (err: any) {
+      console.error('Offer code redemption error:', err);
+      setError('Failed to open offer code redemption');
+      setIsLoading(false);
+      return false;
+    }
+  }, [checkSubscriptionStatus]);
+
   // Initialize on mount
   useEffect(() => {
     initialize();
@@ -256,6 +286,7 @@ export const useRevenueCat = () => {
     purchasePackage,
     restorePurchases,
     checkSubscriptionStatus,
+    presentOfferCodeRedeemSheet,
     // debug
     lastCustomerInfo,
     getCustomerInfoDebug,

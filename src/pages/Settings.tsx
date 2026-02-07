@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock, Gift } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -20,6 +20,7 @@ const Settings = () => {
     getOfferings,
     purchasePackage,
     restorePurchases,
+    presentOfferCodeRedeemSheet,
     isLoading,
     error,
     isInitialized,
@@ -27,6 +28,7 @@ const Settings = () => {
     getCustomerInfoDebug,
     resetRevenueCatUser,
   } = useRevenueCat();
+  const isIOS = Capacitor.getPlatform() === 'ios';
   const [currentPackage, setCurrentPackage] = useState<any>(null);
   const [isEditingOfficials, setIsEditingOfficials] = useState(false);
   const [customGovernor, setCustomGovernor] = useState(settings.customOfficials?.governor || '');
@@ -187,6 +189,16 @@ const Settings = () => {
                     >
                       Restore Purchase
                     </button>
+                    {isIOS && (
+                      <button
+                        onClick={presentOfferCodeRedeemSheet}
+                        disabled={isLoading}
+                        className="text-sm text-primary hover:underline disabled:opacity-50 flex items-center justify-center gap-1"
+                      >
+                        <Gift className="h-3 w-3" />
+                        Redeem Offer Code
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground text-center">
