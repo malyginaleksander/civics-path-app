@@ -93,9 +93,10 @@ const PracticeTest = () => {
   const currentQuestion = testQuestions[currentIndex];
   const progress = testQuestions.length > 0 ? ((currentIndex + 1) / testQuestions.length) * 100 : 0;
   
-  // Check if current question requires multiple answers
+  // Check if current question requires specific number of answers
   const requiredCount = currentQuestion ? getRequiredAnswerCount(currentQuestion.question) : 1;
-  const isMultiSelect = requiredCount > 1;
+  // All questions now support multi-select
+  const isMultiSelect = true;
 
   // Handle single answer selection (immediate submit for single-answer questions)
   const handleSelectAnswer = (answer: string) => {
