@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { useApp } from '@/contexts/AppContext';
+import { toast } from 'sonner';
 
 // Your RevenueCat entitlement identifier (set this in RevenueCat dashboard)
 const ENTITLEMENT_ID = 'premium';
@@ -188,8 +189,18 @@ export const useRevenueCat = () => {
 
   // Present Apple Offer Code redemption sheet (iOS only)
   const presentOfferCodeRedeemSheet = useCallback(async () => {
-    if (!Capacitor.isNativePlatform() || Capacitor.getPlatform() !== 'ios') {
-      setError('Offer code redemption is only available on iOS');
+    const platform = Capacitor.getPlatform();
+    const isNative = Capacitor.isNativePlatform();
+    
+    console.log('[RevenueCat] presentOfferCodeRedeemSheet called', { platform, isNative });
+    
+    if (!isNative) {
+      toast.error('Offer code redemption is only available in the mobile app');
+      return false;
+    }
+    
+    if (platform !== 'ios') {
+      toast.message('Offer codes are only available on iOS');
       return false;
     }
 
@@ -198,7 +209,9 @@ export const useRevenueCat = () => {
 
     try {
       const { Purchases } = await import('@revenuecat/purchases-capacitor');
+      console.log('[RevenueCat] Calling presentCodeRedemptionSheet...');
       await Purchases.presentCodeRedemptionSheet();
+      console.log('[RevenueCat] presentCodeRedemptionSheet returned');
       
       // After the sheet is dismissed, refresh subscription status
       // Note: There's a delay before the entitlement is updated
@@ -209,7 +222,8 @@ export const useRevenueCat = () => {
       
       return true;
     } catch (err: any) {
-      console.error('Offer code redemption error:', err);
+      console.error('[RevenueCat] Offer code redemption error:', err);
+      toast.error('Failed to open offer code redemption');
       setError('Failed to open offer code redemption');
       setIsLoading(false);
       return false;
