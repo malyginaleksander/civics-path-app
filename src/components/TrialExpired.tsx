@@ -142,17 +142,15 @@ const TrialExpired: React.FC = () => {
               <RotateCcw className="w-4 h-4 mr-2" />
               Restore Purchase
             </Button>
-            {isIOS && (
-              <Button
-                variant="ghost"
-                onClick={presentOfferCodeRedeemSheet}
-                disabled={isLoading}
-                className="w-full"
-              >
-                <Gift className="w-4 h-4 mr-2" />
-                Redeem Offer Code
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              onClick={presentOfferCodeRedeemSheet}
+              disabled={isLoading}
+              className="w-full"
+            >
+              <Gift className="w-4 h-4 mr-2" />
+              Redeem Offer Code
+            </Button>
           </div>
         )}
         
