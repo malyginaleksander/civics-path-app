@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Lock, Star, RotateCcw, Loader2 } from 'lucide-react';
+import { Lock, Star, RotateCcw, Loader2, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
@@ -14,6 +14,7 @@ const TrialExpired: React.FC = () => {
     getOfferings, 
     purchasePackage, 
     restorePurchases,
+    presentOfferCodeRedeemSheet,
     isLoading, 
     error 
   } = useRevenueCat();
@@ -71,6 +72,7 @@ const TrialExpired: React.FC = () => {
   };
 
   const isNative = Capacitor.isNativePlatform();
+  const isIOS = Capacitor.getPlatform() === 'ios';
   const priceString = currentPackage?.product?.priceString || FALLBACK_PRICE;
 
   return (
@@ -130,15 +132,28 @@ const TrialExpired: React.FC = () => {
         )}
 
         {isNative && (
-          <Button
-            variant="ghost"
-            onClick={handleRestore}
-            disabled={isLoading}
-            className="w-full"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Restore Purchase
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="ghost"
+              onClick={handleRestore}
+              disabled={isLoading}
+              className="w-full"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Restore Purchase
+            </Button>
+            {isIOS && (
+              <Button
+                variant="ghost"
+                onClick={presentOfferCodeRedeemSheet}
+                disabled={isLoading}
+                className="w-full"
+              >
+                <Gift className="w-4 h-4 mr-2" />
+                Redeem Offer Code
+              </Button>
+            )}
+          </div>
         )}
         
         <p className="text-xs text-muted-foreground">
