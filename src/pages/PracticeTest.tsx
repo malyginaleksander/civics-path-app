@@ -278,7 +278,7 @@ const PracticeTest = () => {
           )}
 
           {/* Actions */}
-          <div className="space-y-3">
+          <div className="space-y-3 pb-[env(safe-area-inset-bottom,24px)]">
             {wrongAnswers.length > 0 && (
               <Button
                 onClick={() => navigate(`/practice?mode=wrong&questions=${wrongAnswers.map(a => a.questionId).join(',')}`)}
@@ -349,7 +349,7 @@ const PracticeTest = () => {
 
         {/* Next Button */}
         {showResult && (
-          <div className="mt-6 safe-area-bottom">
+          <div className="mt-6 pb-[env(safe-area-inset-bottom,24px)]">
             <Button
               onClick={handleNext}
               className="w-full"
@@ -365,6 +365,11 @@ const PracticeTest = () => {
               )}
             </Button>
           </div>
+        )}
+
+        {/* Bottom safe area when no button is visible */}
+        {!showResult && (
+          <div className="pb-[env(safe-area-inset-bottom,24px)]" />
         )}
       </div>
     </div>
