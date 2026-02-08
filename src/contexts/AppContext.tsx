@@ -119,7 +119,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Premium access must be granted strictly by store entitlements (RevenueCat),
   // not by local persisted flags (which can leak across different sandbox accounts).
-  const [isPremium, setIsPremiumState] = useState<boolean>(false);
+  // Exception: Android promo codes are stored locally since Google Play doesn't support partial discounts.
+  const [isPremium, setIsPremiumState] = useState<boolean>(() => {
+    // Check for Android promo code redemption on init
+    const promoRedeemed = localStorage.getItem('androidPromoRedeemed');
+    return promoRedeemed === 'true';
+  });
 
   const trialDaysLeft = React.useMemo(() => {
     if (isPremium) return TRIAL_DAYS;
