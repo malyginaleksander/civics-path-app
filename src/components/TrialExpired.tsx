@@ -73,7 +73,16 @@ const TrialExpired: React.FC = () => {
 
   const isNative = Capacitor.isNativePlatform();
   const isIOS = Capacitor.getPlatform() === 'ios';
+  const isAndroid = Capacitor.getPlatform() === 'android';
   const priceString = currentPackage?.product?.priceString || FALLBACK_PRICE;
+
+  const handleRedeemCode = () => {
+    if (isIOS) {
+      presentOfferCodeRedeemSheet();
+    } else if (isAndroid) {
+      toast.info('To redeem a promo code, open the Google Play Store app → Menu → Payments & subscriptions → Redeem promo code');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background p-6">
@@ -144,12 +153,12 @@ const TrialExpired: React.FC = () => {
             </Button>
             <Button
               variant="ghost"
-              onClick={presentOfferCodeRedeemSheet}
+              onClick={handleRedeemCode}
               disabled={isLoading}
               className="w-full"
             >
               <Gift className="w-4 h-4 mr-2" />
-              Redeem Offer Code
+              Redeem {isIOS ? 'Offer' : 'Promo'} Code
             </Button>
           </div>
         )}
