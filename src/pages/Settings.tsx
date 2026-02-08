@@ -679,7 +679,12 @@ const Settings = () => {
                 <span className="ml-2 text-xs text-muted-foreground">({5 - debugTapCount} more)</span>
               )}
             </p>
-            <p className="text-sm text-muted-foreground">Version 1.0.0</p>
+            <p 
+              className="text-sm text-muted-foreground cursor-pointer select-none"
+              onClick={handleVersionTap}
+            >
+              Version 1.0.7
+            </p>
             <p className="text-xs text-muted-foreground mt-2">
               128 official 2025 USCIS civics questions
             </p>
