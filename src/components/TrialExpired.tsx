@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Lock, Star, RotateCcw, Loader2, Gift } from 'lucide-react';
+import { Lock, Star, RotateCcw, Loader2, Gift, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
+import { useApp } from '@/contexts/AppContext';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
 // Fallback price if RevenueCat fails to load (should match store pricing)
 const FALLBACK_PRICE = '$6.99';
+
+// Valid Android promo code
+const ANDROID_PROMO_CODE = 'ALEKSM2026';
 
 const TrialExpired: React.FC = () => {
   const { 
@@ -18,7 +23,10 @@ const TrialExpired: React.FC = () => {
     isLoading, 
     error 
   } = useRevenueCat();
+  const { setPremium } = useApp();
   const [currentPackage, setCurrentPackage] = useState<any>(null);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
 
   useEffect(() => {
     const loadOfferings = async () => {
@@ -32,6 +40,29 @@ const TrialExpired: React.FC = () => {
       loadOfferings();
     }
   }, [getOfferings]);
+
+  const handlePromoCodeSubmit = () => {
+    if (!promoCode.trim()) {
+      toast.error('Please enter a promo code');
+      return;
+    }
+
+    setPromoLoading(true);
+    
+    // Simulate a brief delay for UX
+    setTimeout(() => {
+      if (promoCode.trim().toUpperCase() === ANDROID_PROMO_CODE) {
+        // Valid code - grant premium and persist
+        localStorage.setItem('androidPromoRedeemed', 'true');
+        setPremium(true);
+        toast.success('Promo code applied! You now have premium access.');
+      } else {
+        toast.error('Invalid promo code. Please try again.');
+      }
+      setPromoLoading(false);
+      setPromoCode('');
+    }, 500);
+  };
 
   const handlePurchase = async () => {
     if (!isNative) {
@@ -151,15 +182,45 @@ const TrialExpired: React.FC = () => {
               <RotateCcw className="w-4 h-4 mr-2" />
               Restore Purchase
             </Button>
-            <Button
-              variant="ghost"
-              onClick={handleRedeemCode}
-              disabled={isLoading}
-              className="w-full"
-            >
-              <Gift className="w-4 h-4 mr-2" />
-              Redeem {isIOS ? 'Offer' : 'Promo'} Code
-            </Button>
+            {isIOS && (
+              <Button
+                variant="ghost"
+                onClick={handleRedeemCode}
+                disabled={isLoading}
+                className="w-full"
+              >
+                <Gift className="w-4 h-4 mr-2" />
+                Redeem Offer Code
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Android-only promo code input */}
+        {isAndroid && (
+          <div className="space-y-3 pt-2 border-t border-border">
+            <p className="text-sm text-muted-foreground">Have a promo code?</p>
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="Enter promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                className="flex-1"
+                disabled={promoLoading}
+              />
+              <Button
+                onClick={handlePromoCodeSubmit}
+                disabled={promoLoading || !promoCode.trim()}
+                size="default"
+              >
+                {promoLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Ticket className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
           </div>
         )}
         
