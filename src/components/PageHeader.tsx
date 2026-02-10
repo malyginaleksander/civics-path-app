@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Capacitor } from '@capacitor/core';
 
 interface PageHeaderProps {
   title: string;
@@ -19,6 +20,7 @@ export const PageHeader = ({
   rightContent,
 }: PageHeaderProps) => {
   const navigate = useNavigate();
+  const isAndroid = Capacitor.getPlatform() === 'android';
 
   const handleBack = () => {
     // Always navigate to backTo route - more reliable in Capacitor WebViews
@@ -26,7 +28,7 @@ export const PageHeader = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <header className={`sticky ${isAndroid ? 'top-6' : 'top-[env(safe-area-inset-top,0px)]'} z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border`}>
       <div className="flex items-center justify-between h-14 px-4 max-w-3xl mx-auto">
         <div className="flex items-center gap-2">
           {showBack && (
