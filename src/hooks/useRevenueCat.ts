@@ -60,13 +60,17 @@ export const useRevenueCat = () => {
       const activeEntitlements = customerInfo.entitlements?.active || {};
       // Only grant premium if the specific 'premium' entitlement is active
       const hasActiveEntitlement = ENTITLEMENT_ID in activeEntitlements;
+      // Also check for Android promo code redemption (local-only, not via store)
+      const androidPromoRedeemed = localStorage.getItem('androidPromoRedeemed') === 'true';
+      const shouldBePremium = hasActiveEntitlement || androidPromoRedeemed;
       console.log('RevenueCat checkSubscriptionStatus:', {
         originalAppUserId: customerInfo.originalAppUserId,
         activeEntitlements: Object.keys(activeEntitlements),
         hasActiveEntitlement,
+        androidPromoRedeemed,
         requiredEntitlement: ENTITLEMENT_ID
       });
-      setPremium(hasActiveEntitlement);
+      setPremium(shouldBePremium);
 
       return hasActiveEntitlement;
     } catch (err) {
