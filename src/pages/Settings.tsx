@@ -147,7 +147,7 @@ const Settings = () => {
       if (promoCode.trim().toUpperCase() === ANDROID_PROMO_CODE) {
         localStorage.setItem('androidPromoRedeemed', 'true');
         setPremium(true);
-        toast.success('Promo code applied! You now have premium access.');
+        toast.success('🎉 Premium activated! Enjoy full access.');
       } else {
         toast.error('Invalid promo code. Please try again.');
       }
@@ -235,38 +235,42 @@ const Settings = () => {
                         Redeem Offer Code
                       </button>
                     )}
-                    {isAndroid && (
-                      <div className="mt-3 pt-3 border-t border-border space-y-2">
-                        <p className="text-sm text-muted-foreground">Have a promo code?</p>
-                        <div className="flex gap-2">
-                          <Input
-                            type="text"
-                            placeholder="Enter promo code"
-                            value={promoCode}
-                            onChange={(e) => setPromoCode(e.target.value)}
-                            className="flex-1"
-                            disabled={promoLoading}
-                          />
-                          <Button
-                            onClick={handlePromoCodeSubmit}
-                            disabled={promoLoading || !promoCode.trim()}
-                            size="default"
-                          >
-                            {promoLoading ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Ticket className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground text-center">
                     Purchase available in the mobile app
                   </p>
                 )}
+              </div>
+            )}
+
+            {/* Android Promo Code - Always visible on Android */}
+            {isAndroid && (
+              <div className="px-4 pb-4 pt-3 border-t border-border space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  {isPremium ? 'Enter another offer code' : 'Have a promo code?'}
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Enter promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="flex-1"
+                    disabled={promoLoading}
+                  />
+                  <Button
+                    onClick={handlePromoCodeSubmit}
+                    disabled={promoLoading || !promoCode.trim()}
+                    size="default"
+                  >
+                    {promoLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Ticket className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
             )}
 

@@ -55,7 +55,7 @@ const TrialExpired: React.FC = () => {
         // Valid code - grant premium and persist
         localStorage.setItem('androidPromoRedeemed', 'true');
         setPremium(true);
-        toast.success('Promo code applied! You now have premium access.');
+        toast.success('🎉 Premium activated! Enjoy full access.');
       } else {
         toast.error('Invalid promo code. Please try again.');
       }
