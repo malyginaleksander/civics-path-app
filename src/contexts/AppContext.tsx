@@ -135,7 +135,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return Math.max(0, TRIAL_DAYS - diffDays);
   }, [trialStartDate, isPremium]);
 
-  const isTrialExpired = !isPremium && trialDaysLeft === 0;
+  const isTrialExpired = !isPremium && trialDaysLeft === 0 && Capacitor.isNativePlatform();
 
   const setPremium = (value: boolean) => {
     setIsPremiumState(value);
