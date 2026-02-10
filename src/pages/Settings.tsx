@@ -667,7 +667,7 @@ const Settings = () => {
             {/* Senior Mode */}
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <HeartHandshake size={20} className="text-muted-foreground" />
+                <HeartHandshake className="text-muted-foreground w-6 h-6 sm:w-5 sm:h-5" />
                 <div>
                   <p className="font-medium text-foreground">Senior Mode (65/20 Rule)</p>
                   <p className="text-sm text-muted-foreground">
