@@ -733,7 +733,7 @@ const Settings = () => {
               className="text-sm text-muted-foreground cursor-pointer select-none"
               onClick={handleVersionTap}
             >
-              Version 1.0.7
+              Version 1.0.2.44 (build 44)
             </p>
             <p className="text-xs text-muted-foreground mt-2">
               128 official 2025 USCIS civics questions
