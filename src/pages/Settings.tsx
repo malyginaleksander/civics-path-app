@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock, Gift, Send } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, HeartHandshake, MapPin, Pencil, RotateCcw, Clock, Gift, Send } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -667,7 +667,7 @@ const Settings = () => {
             {/* Senior Mode */}
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Users size={28} className="text-muted-foreground" />
+                <HeartHandshake size={20} className="text-muted-foreground" />
                 <div>
                   <p className="font-medium text-foreground">Senior Mode (65/20 Rule)</p>
                   <p className="text-sm text-muted-foreground">
