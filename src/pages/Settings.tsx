@@ -1,4 +1,4 @@
-import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock, Gift } from 'lucide-react';
+import { Moon, Sun, Type, Volume2, Bell, Trash2, Info, Crown, Loader2, Users, MapPin, Pencil, RotateCcw, Clock, Gift, Ticket } from 'lucide-react';
 import { Layout } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Switch } from '@/components/ui/switch';
@@ -13,8 +13,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { statesData, federalOfficials, getStateData } from '@/data/stateData';
 
+const ANDROID_PROMO_CODE = 'ALEKSM2026';
+
 const Settings = () => {
-  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium } = useApp();
+  const { settings, updateSettings, clearAllData, testResults, learningList, seenQuestions, trialDaysLeft, isPremium, setPremium } = useApp();
   const {
     offerings,
     getOfferings,
@@ -35,8 +37,11 @@ const Settings = () => {
   const [customSenator1, setCustomSenator1] = useState(settings.customOfficials?.senator1 || '');
   const [customSenator2, setCustomSenator2] = useState(settings.customOfficials?.senator2 || '');
   const [customRepresentative, setCustomRepresentative] = useState(settings.customOfficials?.representative || '');
+  const [promoCode, setPromoCode] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const isNative = Capacitor.isNativePlatform();
+  const isAndroid = Capacitor.getPlatform() === 'android';
 
   // Debug mode: tap version 5 times to toggle
   const [debugTapCount, setDebugTapCount] = useState(0);
@@ -120,6 +125,25 @@ const Settings = () => {
     await restorePurchases();
   };
 
+  const handlePromoCodeSubmit = () => {
+    if (!promoCode.trim()) {
+      toast.error('Please enter a promo code');
+      return;
+    }
+    setPromoLoading(true);
+    setTimeout(() => {
+      if (promoCode.trim().toUpperCase() === ANDROID_PROMO_CODE) {
+        localStorage.setItem('androidPromoRedeemed', 'true');
+        setPremium(true);
+        toast.success('Promo code applied! You now have premium access.');
+      } else {
+        toast.error('Invalid promo code. Please try again.');
+      }
+      setPromoLoading(false);
+      setPromoCode('');
+    }, 500);
+  };
+
   const fontSizes = [
     { value: 'normal', label: 'Normal' },
     { value: 'medium', label: 'Medium' },
@@ -198,6 +222,32 @@ const Settings = () => {
                         <Gift className="h-3 w-3" />
                         Redeem Offer Code
                       </button>
+                    )}
+                    {isAndroid && (
+                      <div className="mt-3 pt-3 border-t border-border space-y-2">
+                        <p className="text-sm text-muted-foreground">Have a promo code?</p>
+                        <div className="flex gap-2">
+                          <Input
+                            type="text"
+                            placeholder="Enter promo code"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                            className="flex-1"
+                            disabled={promoLoading}
+                          />
+                          <Button
+                            onClick={handlePromoCodeSubmit}
+                            disabled={promoLoading || !promoCode.trim()}
+                            size="default"
+                          >
+                            {promoLoading ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Ticket className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
                     )}
                   </div>
                 ) : (
