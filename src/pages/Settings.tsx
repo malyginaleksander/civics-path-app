@@ -667,7 +667,7 @@ const Settings = () => {
             {/* Senior Mode */}
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Users size={24} className="text-muted-foreground" />
+                <Users size={28} className="text-muted-foreground" />
                 <div>
                   <p className="font-medium text-foreground">Senior Mode (65/20 Rule)</p>
                   <p className="text-sm text-muted-foreground">
