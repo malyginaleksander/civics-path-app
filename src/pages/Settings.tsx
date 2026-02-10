@@ -9,6 +9,7 @@ import { useApp } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { statesData, federalOfficials, getStateData } from '@/data/stateData';
@@ -39,9 +40,20 @@ const Settings = () => {
   const [customRepresentative, setCustomRepresentative] = useState(settings.customOfficials?.representative || '');
   const [promoCode, setPromoCode] = useState('');
   const [promoLoading, setPromoLoading] = useState(false);
+  const [appVersion, setAppVersion] = useState<string>('');
 
   const isNative = Capacitor.isNativePlatform();
   const isAndroid = Capacitor.getPlatform() === 'android';
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      CapApp.getInfo().then(info => {
+        setAppVersion(`${info.version} (build ${info.build})`);
+      }).catch(() => {
+        setAppVersion('1.0.2.44');
+      });
+    }
+  }, []);
 
   // Debug mode: tap version 5 times to toggle
   const [debugTapCount, setDebugTapCount] = useState(0);
@@ -733,7 +745,7 @@ const Settings = () => {
               className="text-sm text-muted-foreground cursor-pointer select-none"
               onClick={handleVersionTap}
             >
-              Version 1.0.2.44 (build 44)
+              Version {appVersion || 'Web Preview'}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
               128 official 2025 USCIS civics questions
