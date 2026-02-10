@@ -289,8 +289,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     // Reset trial start date to now (restarts the 5-day trial)
     const now = new Date().toISOString();
     setTrialStartDate(now);
+    // Preserve Android promo code redemption across data clears
+    const promoRedeemed = localStorage.getItem('androidPromoRedeemed');
     localStorage.clear();
     localStorage.setItem('trialStartDate', now);
+    if (promoRedeemed === 'true') {
+      localStorage.setItem('androidPromoRedeemed', 'true');
+      setIsPremiumState(true);
+    }
   };
 
   return (
