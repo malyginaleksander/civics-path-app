@@ -10,13 +10,16 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const { settings } = useApp();
 
-  // Show a short, fixed background behind the status bar area when using
-  // the light theme. This is a UI-only fallback for devices / WebViews that
-  // don't honor native status bar icon color changes.
-  // Only show the UI fallback on non-native platforms. On Android/iOS
-  // prefer the native StatusBar plugin to control the icons/background.
-  const isNative = Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios';
+  const platform = Capacitor.getPlatform();
+  const isNative = platform === 'android' || platform === 'ios';
+  const isAndroid = platform === 'android';
   const showLightStatusBarBg = !isNative && settings.theme !== 'dark';
+
+  // Android WebViews often don't support env(safe-area-inset-top), so use a
+  // fixed fallback (24px) to avoid content hiding behind the status bar.
+  const topPadding = isAndroid
+    ? 'pt-6'
+    : 'pt-[env(safe-area-inset-top,0px)]';
 
   return (
     <>
@@ -27,7 +30,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
       )}
 
-      <div className="min-h-screen bg-background pt-[env(safe-area-inset-top,0px)]">
+      <div className={`min-h-screen bg-background ${topPadding}`}>
         <main className="pb-20">
           {children}
         </main>
